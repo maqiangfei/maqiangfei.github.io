@@ -575,7 +575,7 @@ a.article-title:hover {
 .article-entry p,
 .article-entry table {
   line-height: 1.6em;
-  margin: 0.8em 0;
+  margin: 0.6em 0;
 }
 .article-entry h1,
 .article-entry h2,
@@ -592,7 +592,7 @@ a.article-title:hover {
 .article-entry h5,
 .article-entry h6 {
   line-height: 1.1em;
-  margin: 1.1em 0;
+  margin: 1.1em 0 0.2em 0;
 }
 .article-entry a {
   color: #258fb8;
@@ -604,8 +604,8 @@ a.article-title:hover {
 .article-entry ul,
 .article-entry ol,
 .article-entry dl {
-  margin-top: 1.6em;
-  margin-bottom: 1.6em;
+  margin-top: 0.6em;
+  margin-bottom: 0.6em;
 }
 .article-entry img,
 .article-entry video {
@@ -633,8 +633,8 @@ a.article-title:hover {
 }
 .article-entry blockquote {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.4em;
-  margin: 1.6em 20px;
+  font-size: 1em;
+  margin: 0.6em 20px;
   padding: 0.5em 1em;
   overflow: auto;
   border-left-style: solid;
@@ -1214,14 +1214,15 @@ a.article-title:hover {
 .article-entry .highlight {
   background: #f5f2f0;
   margin: 0 0;
-  padding: 15px 10px;
+  padding: 10px 12px;
   border-style: solid;
   border-color: #ddd;
   border-width: 2px;
   border-radius: 10px;
   overflow: auto;
   color: #4d4d4c;
-  line-height: 25.6px;
+  line-height: 23.6px;
+  font-size: 14px;
 }
 .article-entry .highlight .gutter pre,
 .article-entry .gist .gist-file .gist-data .line-numbers {
