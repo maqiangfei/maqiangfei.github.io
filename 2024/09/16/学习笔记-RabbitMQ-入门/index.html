@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/blog-images/master/picgo/%E7%B1%BB%E5%9B%BE.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/blog-images/master/picgo/publisher.png">
 <meta property="article:published_time" content="2024-09-16T02:30:30.000Z">
-<meta property="article:modified_time" content="2024-09-18T13:08:40.940Z">
+<meta property="article:modified_time" content="2024-09-18T13:41:26.640Z">
 <meta property="article:author" content="Maffy">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="RabbitMQ">
@@ -211,11 +211,11 @@
 </ul>
 <h2 id="声明队列和交换机"><a href="#声明队列和交换机" class="headerlink" title="声明队列和交换机"></a>声明队列和交换机</h2><p><img src="https://raw.githubusercontent.com/maqiangfei/blog-images/master/picgo/%E7%B1%BB%E5%9B%BE.png"></p>
 <ul>
-<li><p>Queue：用于声明队列，可以OueueBuilder工厂类构建</p>
+<li><p>Queue：用于声明队列，可以使用OueueBuilder工厂类构建</p>
 </li>
-<li><p>Exchanger：声明交换机，ExchangeBuilder工厂构建</p>
+<li><p>Exchanger：声明交换机，可以使用ExchangeBuilder工厂构建</p>
 </li>
-<li><p>Binding：声明队列和交换机的绑定关系，可以BingdingBuilder构建</p>
+<li><p>Binding：声明队列和交换机的绑定关系，可以使用BingdingBuilder构建</p>
 </li>
 </ul>
 <h3 id="Bean方式"><a href="#Bean方式" class="headerlink" title="Bean方式"></a>Bean方式</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RabbitConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> FanoutExchange <span class="title function_">fanoutExchange</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// return ExchangeBuilder.fanoutExchange(&quot;&quot;).build();</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">FanoutExchange</span>(<span class="string">&quot;exchange.fanout&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> DirectExchange <span class="title function_">directExchange</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// return ExchangeBuilder.fanoutExchange(&quot;&quot;).build();</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">DirectExchange</span>(<span class="string">&quot;exchange.direct&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Queue <span class="title function_">queue</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// return QueueBuilder.durable(&quot;test.queue&quot;).build();</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Queue</span>(<span class="string">&quot;test.queue&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Binding <span class="title function_">fanoutBinding</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queue()).to(fanoutExchange());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Binding <span class="title function_">directBindingBlue</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queue()).to(directExchange()).with(<span class="string">&quot;blue&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Binding <span class="title function_">directBindingRed</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queue()).to(directExchange()).with(<span class="string">&quot;red&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -236,14 +236,14 @@
 <h2 id="接收消息"><a href="#接收消息" class="headerlink" title="接收消息"></a>接收消息</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MqListener</span> &#123;</span><br><span class="line">  <span class="meta">@RabbitListener(queues=&quot;name&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listen</span><span class="params">(String msg)</span> &#123;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="消息转换器"><a href="#消息转换器" class="headerlink" title="消息转换器"></a>消息转换器</h2><p>RabbitTemplate对消息对象的处理是由MessageConverter来处理的。而默认实现是SimpleMessageConverter，基于JDK的ObjectOutputStream完成序列化。存在下列问题：</p>
-<ul>
+<ol>
 <li><p>JDK的序列化有安全风险</p>
 </li>
 <li><p>JDK序列化的消息太大</p>
 </li>
 <li><p>JDK序列化的消息可读性太差</p>
 </li>
-</ul>
+</ol>
 <p>使用JSON序列化代替默认的JDK序列化</p>
 <ul>
 <li>引入依赖</li>
