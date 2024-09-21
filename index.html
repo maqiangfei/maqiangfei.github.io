@@ -92,35 +92,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <!-- Table of Contents -->
-        
         <blockquote>
 <p>最小安装的Ubuntu服务器20.04，具有sudo管理员权限的普通用户，配置静态IP</p>
 </blockquote>
-<ol>
-<li><p>查看当前ip地址及网关地址</p>
-<p>输入命令<code>ip addr</code>查看ip地址</p>
-<p><img src="https://raw.githubusercontent.com/maqiangfei/blog-images/master/picgo/QQ_1726928984133.png"></p>
-<p>输入命令<code>ip route show</code>查看网关地址</p>
-<p><img src="https://raw.githubusercontent.com/maqiangfei/blog-images/master/picgo/QQ_1726929126143.png"></p>
-</li>
-<li><p>切换到<code>/etc/netplan</code>目录下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /etc/netplan/</span><br><span class="line">$ <span class="built_in">ls</span></span><br><span class="line">00-installer-config.yaml</span><br></pre></td></tr></table></figure>
-
-<p>注意：配置文件的名称可能有差异。并且它是一个yaml文件，注意语法缩进</p>
-</li>
-<li><p>使用cat命令查看<code>00-install-config.yaml</code>的内容</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> 00-installer-config.yaml</span><br><span class="line"><span class="comment"># This is the network config written by &#x27;subiquity&#x27;</span></span><br><span class="line">network:</span><br><span class="line">  ethernets:</span><br><span class="line">    ens33:</span><br><span class="line">      dhcp4: <span class="literal">true</span></span><br><span class="line">  version: 2</span><br></pre></td></tr></table></figure>
-
-<p>从上面的输出可以看出网络接口为<code>ens33</code>，它开启了DHCP</p>
-</li>
-<li><p>配置静态IP代替DHCP，使用<code>vi</code>编辑配置文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> vi 00-installer-config.yaml</span><br><span class="line"><span class="comment"># This is the network config written by &#x27;subiquity&#x27;</span></span><br><span class="line">network:</span><br><span class="line">  renderer: networkd</span><br><span class="line">  ethernets:</span><br><span class="line">    ens33:</span><br><span class="line">      addresses: </span><br><span class="line">        - 172.16.64.128/24  <span class="comment"># ip地址</span></span><br><span class="line">      nameservers: </span><br><span class="line">        addresses: [223.5.5.5, 8.8.8.8] <span class="comment"># DNS服务器</span></span><br><span class="line">        routes: </span><br><span class="line">          - to: default</span><br><span class="line">          via: 172.16.64.2 <span class="comment"># 网关地址</span></span><br><span class="line">  version: 2</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用<code>netplan</code>命令使配置生效</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> netplan apply</span><br></pre></td></tr></table></figure></li>
-</ol>
-
+        
+          <p class="article-more-link">
+            <a href="/2024/09/21/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Ubuntu-20-04-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81ip/#more">继续阅读全文 »</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
