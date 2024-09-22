@@ -194,36 +194,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <!-- Table of Contents -->
-        
         <blockquote>
 <p>FastDFS是一个开源的轻量级分布式文件系统，由阿里巴巴开发并开源，基于C语言</p>
 </blockquote>
-<h2 id="分布式文件系统"><a href="#分布式文件系统" class="headerlink" title="分布式文件系统"></a>分布式文件系统</h2><p><img src="https://raw.githubusercontent.com/maqiangfei/blog-images/master/picgo/50c61108e6a33f6998e68c115611e37.png"></p>
-<p>传统方式将所有的文件全部存放在一台计算机中，有许多缺点：</p>
-<ul>
-<li><p>如果这台计算机宕机，那么整个服务不可用</p>
-</li>
-<li><p>如果磁盘损坏，那么所有文件丢失</p>
-</li>
-<li><p>一台计算机的磁盘空间非常有限</p>
-</li>
-</ul>
-<p>采用分布式文件系统的优点：</p>
-<ul>
-<li><p>避免单点故障问题</p>
-</li>
-<li><p>提供数据的备份机制</p>
-</li>
-<li><p>提供库容的扩容机制</p>
-</li>
-</ul>
-<h2 id="FastDFS整体架构"><a href="#FastDFS整体架构" class="headerlink" title="FastDFS整体架构"></a>FastDFS整体架构</h2><p>FastDFS文件系统由两大部分构成，一个客户端，一个服务端。</p>
-<p>Java等客户端程序通过API去连接FastDFS。</p>
-<p>服务端由两个部分构成：跟踪器、存储节点。</p>
-<p><code>跟踪器</code>(tracker)：主要做调度工作，在内存中记录集群中存储节点的状态信息，是客户端和后端存储节点的枢纽。由于相关信息存储在内存中，性能高，一个较大的集群（比如上百个group）中有3台文件系统就足够了。</p>
-<p><code>存储节点</code>(storage)：用于存储文件，包括文件和文件属性都保存在存储服务器磁盘上，完成文件管理的所有功能：文件存储、文件同步和提供文件访问等。</p>
-
+        
+          <p class="article-more-link">
+            <a href="/2024/09/22/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-FastDFS-%E5%85%A5%E9%97%A8/#more">继续阅读全文 »</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
