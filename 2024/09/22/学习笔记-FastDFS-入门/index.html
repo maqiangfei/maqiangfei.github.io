@@ -12,14 +12,14 @@
 <meta property="og:site_name" content="Maffy&#39;s blog">
 <meta property="og:description" content="FastDFS是一个开源的轻量级分布式文件系统，由阿里巴巴开发并开源，基于C语言">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/blog-images/master/picgo/50c61108e6a33f6998e68c115611e37.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/picgo/825f36fb3842b4b892741a80ba8efce0.png">
 <meta property="article:published_time" content="2024-09-22T01:00:34.000Z">
-<meta property="article:modified_time" content="2024-09-22T08:30:09.797Z">
+<meta property="article:modified_time" content="2024-09-22T08:56:56.694Z">
 <meta property="article:author" content="Maffy">
 <meta property="article:tag" content="分布式">
 <meta property="article:tag" content="文件系统">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/maqiangfei/blog-images/master/picgo/50c61108e6a33f6998e68c115611e37.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/picgo/825f36fb3842b4b892741a80ba8efce0.png">
   
     <link rel="alternate" href="/atom.xml" title="Maffy&#39;s blog" type="application/atom+xml">
   
@@ -123,8 +123,8 @@
 <li><p>提供库容的扩容机制</p>
 </li>
 </ul>
-<p><img src="https://raw.githubusercontent.com/maqiangfei/blog-images/master/picgo/50c61108e6a33f6998e68c115611e37.png"></p>
-<h2 id="FastDFS整体架构"><a href="#FastDFS整体架构" class="headerlink" title="FastDFS整体架构"></a>FastDFS整体架构</h2><p>FastDFS文件系统由两大部分构成，一个客户端，一个服务端。</p>
+<h2 id="FastDFS整体架构"><a href="#FastDFS整体架构" class="headerlink" title="FastDFS整体架构"></a>FastDFS整体架构</h2><p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/picgo/825f36fb3842b4b892741a80ba8efce0.png"></p>
+<p>FastDFS文件系统由两大部分构成，一个客户端，一个服务端。</p>
 <p>Java等客户端程序通过API去连接FastDFS。</p>
 <p>服务端由两个部分构成：跟踪器、存储节点。</p>
 <p><code>跟踪器</code>(tracker)：主要做调度工作，在内存中记录集群中存储节点的状态信息，是客户端和后端存储节点的枢纽。由于相关信息存储在内存中，性能高，一个较大的集群（比如上百个group）中有3台文件系统就足够了。</p>
