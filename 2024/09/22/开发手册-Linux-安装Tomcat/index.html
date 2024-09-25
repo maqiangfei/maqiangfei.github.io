@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8">
   
-  <title>开发手册 - Ubuntu 安装Tomcat | Maffy&#39;s blog</title>
+  <title>开发手册 - Linux 安装Tomcat | Maffy&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Apache Tomcat 是一个开源的轻量级 Web 服务器，用于运行基于 Java 的网站和应用程序。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="开发手册 - Ubuntu 安装Tomcat">
-<meta property="og:url" content="https://maqiangfei.github.io/2024/09/22/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Ubuntu-%E5%AE%89%E8%A3%85Tomcat/index.html">
+<meta property="og:title" content="开发手册 - Linux 安装Tomcat">
+<meta property="og:url" content="https://maqiangfei.github.io/2024/09/22/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Linux-%E5%AE%89%E8%A3%85Tomcat/index.html">
 <meta property="og:site_name" content="Maffy&#39;s blog">
 <meta property="og:description" content="Apache Tomcat 是一个开源的轻量级 Web 服务器，用于运行基于 Java 的网站和应用程序。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-09-22T05:34:42.000Z">
-<meta property="article:modified_time" content="2024-09-22T09:26:03.995Z">
+<meta property="article:modified_time" content="2024-09-25T02:17:31.331Z">
 <meta property="article:author" content="Maffy">
-<meta property="article:tag" content="Ubuntu">
 <meta property="article:tag" content="安装">
+<meta property="article:tag" content="Linux">
 <meta property="article:tag" content="Tomcat">
 <meta name="twitter:card" content="summary">
   
@@ -71,9 +71,9 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-开发手册-Ubuntu-安装Tomcat" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-开发手册-Linux-安装Tomcat" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2024/09/22/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Ubuntu-%E5%AE%89%E8%A3%85Tomcat/" class="article-date">
+    <a href="/2024/09/22/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Linux-%E5%AE%89%E8%A3%85Tomcat/" class="article-date">
   <time datetime="2024-09-22T05:34:42.000Z" itemprop="datePublished">2024-09-22</time>
 </a>
     
@@ -89,7 +89,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      开发手册 - Ubuntu 安装Tomcat
+      开发手册 - Linux 安装Tomcat
     </h1>
   
 
@@ -104,38 +104,63 @@
 </blockquote>
 <span id="more"></span>
 
-<h2 id="安装Java"><a href="#安装Java" class="headerlink" title="安装Java"></a>安装Java</h2><p>请参考文章<a href="https://maqiangfei.github.io/2024/09/22/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Ubuntu-%E5%AE%89%E8%A3%85Java/">开发手册 - Ubuntu 安装Java</a></p>
-<h2 id="安装Tomcat"><a href="#安装Tomcat" class="headerlink" title="安装Tomcat"></a>安装Tomcat</h2><ol>
+<h2 id="安装Java"><a href="#安装Java" class="headerlink" title="安装Java"></a>安装Java</h2><p>请参考文章<a href="https://maqiangfei.github.io/2024/09/22/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Ubuntu-%E5%AE%89%E8%A3%85Java/">开发手册 - Linux 安装Java</a></p>
+<h2 id="CentOS7"><a href="#CentOS7" class="headerlink" title="CentOS7"></a>CentOS7</h2><ol>
 <li><p>使用<code>wget</code>命令从<a target="_blank" rel="noopener" href="https://tomcat.apache.org/download-80.cgi">Tomcat官网</a>下载Tomcat</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.98/bin/apache-tomcat-8.5.98.tar.gz</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.98/bin/apache-tomcat-8.5.98.tar.gz</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>创建安装目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> <span class="built_in">mkdir</span> /usr/local/tomcat</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> /usr/local/tomcat</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>解压下载的文件到安装目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> tar -zxvf apache-tomcat-8.5.98.tar.gz -C /usr/local/tomcat</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> tar -zxvf apache-tomcat-8.5.98.tar.gz -C /usr/local/tomcat</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>修改tomcat文件夹权限</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /usr/local</span><br><span class="line">$ <span class="built_in">sudo</span> <span class="built_in">chmod</span> 755 -R tomcat</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> 755 -R tomcat</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>为Tomcat配置JDK</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /usr/local/tomcat/apache-tomcat-8.5.98/bin</span><br><span class="line">$ <span class="built_in">sudo</span> vim catalina.sh</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/tomcat/apache-tomcat-8.5.98/bin</span><br><span class="line"><span class="built_in">sudo</span> vim catalina.sh</span><br></pre></td></tr></table></figure>
 
-<p>在<code>catalina.sh</code>文件中中添加JAVA路径</p>
+<p>在<code>catalina.sh</code>文件中添加JAVA路径</p>
 <figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/usr/local/java/jdk1.<span class="number">8.0</span>_421</span><br><span class="line">export JRE_HOME=/usr/local/java/jdk1.<span class="number">8.0</span>_421/jre</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>启动Tomcat</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> ./startup.sh</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ./startup.sh</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>解决外部无法访问</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查防火墙是否启动</span></span><br><span class="line"><span class="built_in">sudo</span> firewall-cmd --state</span><br><span class="line"><span class="comment"># 如未开启 则开启防火墙 </span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start firewalld</span><br><span class="line"><span class="comment"># 查看开启的端口</span></span><br><span class="line"><span class="built_in">sudo</span> firewall-cmd --permanent --zone=public --list-ports</span><br><span class="line"><span class="comment"># 8080没开启 则开启</span></span><br><span class="line"><span class="built_in">sudo</span> firewall-cmd --zone=public --add-port=8080/tcp --permanent</span><br><span class="line"><span class="comment"># 重启防火墙</span></span><br><span class="line"><span class="built_in">sudo</span> firewall-cmd --reload</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h2><ol>
+<li><p>使用<code>wget</code>命令从<a target="_blank" rel="noopener" href="https://tomcat.apache.org/download-80.cgi">Tomcat官网</a>下载Tomcat</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.98/bin/apache-tomcat-8.5.98.tar.gz</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建安装目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> /usr/local/tomcat</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>解压下载的文件到安装目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> tar -zxvf apache-tomcat-8.5.98.tar.gz -C /usr/local/tomcat</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改tomcat文件夹权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> 755 -R tomcat</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>为Tomcat配置JDK</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/tomcat/apache-tomcat-8.5.98/bin</span><br><span class="line"><span class="built_in">sudo</span> vim catalina.sh</span><br></pre></td></tr></table></figure>
+
+<p>在<code>catalina.sh</code>文件中添加JAVA路径</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/usr/local/java/jdk1.<span class="number">8.0</span>_421</span><br><span class="line">export JRE_HOME=/usr/local/java/jdk1.<span class="number">8.0</span>_421/jre</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动Tomcat</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ./startup.sh</span><br></pre></td></tr></table></figure></li>
 </ol>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maqiangfei.github.io/2024/09/22/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Ubuntu-%E5%AE%89%E8%A3%85Tomcat/" data-id="cm1eaq5fx000bfcfybdcahwya" class="article-share-link">分享</a>
+      <a data-url="https://maqiangfei.github.io/2024/09/22/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Linux-%E5%AE%89%E8%A3%85Tomcat/" data-id="cm1hel4ee000g7zfy5je3feqq" class="article-share-link">分享</a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tomcat/" rel="tag">Tomcat</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E8%A3%85/" rel="tag">安装</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tomcat/" rel="tag">Tomcat</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E8%A3%85/" rel="tag">安装</a></li></ul>
 
     </footer>
   </div>
@@ -187,11 +212,11 @@
     
 <nav id="article-nav">
   
-    <a href="/2024/09/22/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Ubuntu-%E5%AE%89%E8%A3%85Java/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2024/09/22/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Linux-%E5%AE%89%E8%A3%85Java/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">
         
-          开发手册 - Ubuntu 安装Java
+          开发手册 - Linux 安装Java
         
       </div>
     </a>
@@ -232,7 +257,7 @@
       
         <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Java"><span class="toc-number">1.</span> <span class="toc-text">安装Java</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Tomcat"><span class="toc-number">2.</span> <span class="toc-text">安装Tomcat</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Java"><span class="toc-number">1.</span> <span class="toc-text">安装Java</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CentOS7"><span class="toc-number">2.</span> <span class="toc-text">CentOS7</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ubuntu"><span class="toc-number">3.</span> <span class="toc-text">Ubuntu</span></a></li></ol>
           </div>
       </div>
     </div>
