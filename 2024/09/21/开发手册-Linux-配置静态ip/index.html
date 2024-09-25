@@ -3,24 +3,26 @@
 <head>
   <meta charset="utf-8">
   
-  <title>开发手册 - Ubuntu 配置静态IP | Maffy&#39;s blog</title>
+  <title>开发手册 - Linux 配置静态IP | Maffy&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="最小安装的Ubuntu服务器20.04，具有sudo管理员权限的普通用户，配置静态IP">
+  <meta name="description" content="最小安装的Ubuntu 20.04及最小安装的CentOS 7可参考本文配置静态IP">
 <meta property="og:type" content="article">
-<meta property="og:title" content="开发手册 - Ubuntu 配置静态IP">
-<meta property="og:url" content="https://maqiangfei.github.io/2024/09/21/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Ubuntu-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81ip/index.html">
+<meta property="og:title" content="开发手册 - Linux 配置静态IP">
+<meta property="og:url" content="https://maqiangfei.github.io/2024/09/21/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Linux-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81ip/index.html">
 <meta property="og:site_name" content="Maffy&#39;s blog">
-<meta property="og:description" content="最小安装的Ubuntu服务器20.04，具有sudo管理员权限的普通用户，配置静态IP">
+<meta property="og:description" content="最小安装的Ubuntu 20.04及最小安装的CentOS 7可参考本文配置静态IP">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/25-21-54-54-QQ_1727272492923.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/25-21-55-50-QQ_1727272547504.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/picgo/QQ_1726928984133.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/picgo/QQ_1726929126143.png">
 <meta property="article:published_time" content="2024-09-21T14:02:14.000Z">
-<meta property="article:modified_time" content="2024-09-22T09:00:20.710Z">
+<meta property="article:modified_time" content="2024-09-25T14:20:15.605Z">
 <meta property="article:author" content="Maffy">
-<meta property="article:tag" content="Ubuntu">
+<meta property="article:tag" content="Linux">
 <meta property="article:tag" content="IP">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/picgo/QQ_1726928984133.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/25-21-54-54-QQ_1727272492923.png">
   
     <link rel="alternate" href="/atom.xml" title="Maffy&#39;s blog" type="application/atom+xml">
   
@@ -73,9 +75,9 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-开发手册-Ubuntu-配置静态ip" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-开发手册-Linux-配置静态ip" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2024/09/21/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Ubuntu-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81ip/" class="article-date">
+    <a href="/2024/09/21/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Linux-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81ip/" class="article-date">
   <time datetime="2024-09-21T14:02:14.000Z" itemprop="datePublished">2024-09-21</time>
 </a>
     
@@ -91,7 +93,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      开发手册 - Ubuntu 配置静态IP
+      开发手册 - Linux 配置静态IP
     </h1>
   
 
@@ -102,11 +104,26 @@
         <!-- Table of Contents -->
         
         <blockquote>
-<p>最小安装的Ubuntu服务器20.04，具有sudo管理员权限的普通用户，配置静态IP</p>
+<p>最小安装的<code>Ubuntu 20.04</code>及最小安装的<code>CentOS 7</code>可参考本文配置<code>静态IP</code></p>
 </blockquote>
 <span id="more"></span>
 
-<ol>
+<h2 id="CentOS-7"><a href="#CentOS-7" class="headerlink" title="CentOS 7"></a>CentOS 7</h2><ol>
+<li><p>查看当前ip地址及网关地址</p>
+<p>输入命令<code>ip addr</code>查看ip地址</p>
+<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/25-21-54-54-QQ_1727272492923.png"></p>
+<p>输入命令<code>ip route show</code>查看网关地址</p>
+<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/25-21-55-50-QQ_1727272547504.png"></p>
+</li>
+<li><p>配置<code>ifcfg-ens33</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/sysconfig/network-scripts</span><br><span class="line"><span class="built_in">sudo</span> vim ifcfg-ens33</span><br></pre></td></tr></table></figure>
+
+<p>修改<code>BOOTPROTO=static</code>、<code>DNBOOT=yes</code>、<code>IPADDR=x.x.x.x</code>、<code>NETMASK=255.255.255.0</code>、<code>GATEWAY=x.x.x.x</code>、<code>DNS1=223.5.5.5</code></p>
+</li>
+<li><p>重启网络</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> service network restart</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Ubuntu-20-04"><a href="#Ubuntu-20-04" class="headerlink" title="Ubuntu 20.04"></a>Ubuntu 20.04</h2><ol>
 <li><p>查看当前ip地址及网关地址</p>
 <p>输入命令<code>ip addr</code>查看ip地址</p>
 <p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/picgo/QQ_1726928984133.png"></p>
@@ -133,11 +150,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maqiangfei.github.io/2024/09/21/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Ubuntu-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81ip/" data-id="cm1hel4ev00237zfy9e455af7" class="article-share-link">分享</a>
+      <a data-url="https://maqiangfei.github.io/2024/09/21/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Linux-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81ip/" data-id="cm1hyf1fc0002jrfy2erjcw3p" class="article-share-link">分享</a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/" rel="tag">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IP/" rel="tag">IP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
 
     </footer>
   </div>
@@ -228,6 +245,17 @@
     <aside id="sidebar">
   
     
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CentOS-7"><span class="toc-number">1.</span> <span class="toc-text">CentOS 7</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ubuntu-20-04"><span class="toc-number">2.</span> <span class="toc-text">Ubuntu 20.04</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
   
     
 
