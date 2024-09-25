@@ -5,17 +5,17 @@
   
   <title>开发手册 - Linux 安装MySQL | Maffy&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="CentOS7卸载MySQL 检查MariaDB 123456#查看mariadbrpm -qa|grep mariadb#卸载mariadb，xxx是上一步查看显示出来的rpm -e --nodeps xxx#删除etc目录下的my.cnfrm &#x2F;etc&#x2F;my.cnf  检查MySQL 1234#查看mysqlrpm -qa | grep mysql#卸载mysql,xxx是上一步查看显示的">
+  <meta name="description" content="最小安装的CentOS7，安装MySQL8，包含远程连接问题的解决方案">
 <meta property="og:type" content="article">
 <meta property="og:title" content="开发手册 - Linux 安装MySQL">
 <meta property="og:url" content="https://maqiangfei.github.io/2024/09/25/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Linux-%E5%AE%89%E8%A3%85MySQL/index.html">
 <meta property="og:site_name" content="Maffy&#39;s blog">
-<meta property="og:description" content="CentOS7卸载MySQL 检查MariaDB 123456#查看mariadbrpm -qa|grep mariadb#卸载mariadb，xxx是上一步查看显示出来的rpm -e --nodeps xxx#删除etc目录下的my.cnfrm &#x2F;etc&#x2F;my.cnf  检查MySQL 1234#查看mysqlrpm -qa | grep mysql#卸载mysql,xxx是上一步查看显示的">
+<meta property="og:description" content="最小安装的CentOS7，安装MySQL8，包含远程连接问题的解决方案">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/25-10-36-27-QQ_1727231782128.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/25-11-32-43-QQ_1727235157352.png">
 <meta property="article:published_time" content="2024-09-25T02:24:32.000Z">
-<meta property="article:modified_time" content="2024-09-25T04:55:30.662Z">
+<meta property="article:modified_time" content="2024-09-25T05:11:25.351Z">
 <meta property="article:author" content="Maffy">
 <meta property="article:tag" content="安装">
 <meta property="article:tag" content="Linux">
@@ -102,7 +102,10 @@
       
         <!-- Table of Contents -->
         
-        <span id="more"></span>
+        <blockquote>
+<p>最小安装的CentOS7，安装MySQL8，包含远程连接问题的解决方案</p>
+</blockquote>
+<span id="more"></span>
 
 <h2 id="CentOS7"><a href="#CentOS7" class="headerlink" title="CentOS7"></a>CentOS7</h2><h3 id="卸载MySQL"><a href="#卸载MySQL" class="headerlink" title="卸载MySQL"></a>卸载MySQL</h3><ol>
 <li><p>检查MariaDB</p>

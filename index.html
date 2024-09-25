@@ -92,50 +92,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <!-- Table of Contents -->
+        <blockquote>
+<p>最小安装的CentOS7，安装MySQL8，包含远程连接问题的解决方案</p>
+</blockquote>
         
-        <span id="more"></span>
-
-<h2 id="CentOS7"><a href="#CentOS7" class="headerlink" title="CentOS7"></a>CentOS7</h2><h3 id="卸载MySQL"><a href="#卸载MySQL" class="headerlink" title="卸载MySQL"></a>卸载MySQL</h3><ol>
-<li><p>检查MariaDB</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#查看mariadb</span></span><br><span class="line">rpm -qa|grep mariadb</span><br><span class="line"><span class="comment">#卸载mariadb，xxx是上一步查看显示出来的</span></span><br><span class="line">rpm -e --nodeps xxx</span><br><span class="line"><span class="comment">#删除etc目录下的my.cnf</span></span><br><span class="line"><span class="built_in">rm</span> /etc/my.cnf</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>检查MySQL</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#查看mysql</span></span><br><span class="line">rpm -qa | grep mysql</span><br><span class="line"><span class="comment">#卸载mysql,xxx是上一步查看显示的结果</span></span><br><span class="line">rpm -e --nodeps xxx</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="下载安装包"><a href="#下载安装包" class="headerlink" title="下载安装包"></a>下载安装包</h3><p><a target="_blank" rel="noopener" href="https://downloads.mysql.com/archives/community/?spm=a2c6h.12873639.article-detail.7.51fa3861PBXOoA">MySQL官网</a>下载对应版本的安装包，并上传到centos</p>
-<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/25-10-36-27-QQ_1727231782128.png"></p>
-<h3 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 创建安装目录</span><br><span class="line">sudo mkdir /usr/local/mysql</span><br><span class="line"># 解压到安装目录</span><br><span class="line">sudo tar -xvf mysql-8.0.28-linux-glibc2.12-x86_64.tar.xz -C /usr/local/mysql</span><br></pre></td></tr></table></figure>
-
-<h3 id="创建data目录"><a href="#创建data目录" class="headerlink" title="创建data目录"></a>创建data目录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> /usr/local/mysql/data</span><br></pre></td></tr></table></figure>
-
-<h3 id="更改权限"><a href="#更改权限" class="headerlink" title="更改权限"></a>更改权限</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> -R 组名.用户名 /usr/local/mysql</span><br></pre></td></tr></table></figure>
-
-<h3 id="配置my-cnf文件"><a href="#配置my-cnf文件" class="headerlink" title="配置my.cnf文件"></a>配置my.cnf文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/my.cnf</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[mysql]</span><br><span class="line">#设置mysql客户端默认字符集</span><br><span class="line">default-character-<span class="keyword">set</span>=utf8</span><br><span class="line">[mysqld]</span><br><span class="line"># 设置<span class="number">3306</span>端口</span><br><span class="line">port = <span class="number">3306</span></span><br><span class="line"># 设置mysql的安装目录</span><br><span class="line">basedir=/usr/local/mysql/mysql-<span class="number">8.0</span>.<span class="number">28</span>-linux-glibc2.<span class="number">12</span>-x86_64</span><br><span class="line"># 设置mysql数据库的数据的存放目录</span><br><span class="line">datadir=/usr/local/mysql/mysql-<span class="number">8.0</span>.<span class="number">28</span>-linux-glibc2.<span class="number">12</span>-x86_64/data</span><br><span class="line"># 允许最大连接数</span><br><span class="line">max_connections=<span class="number">200</span></span><br><span class="line"># 服务端使用的字符集默认为<span class="number">8</span>比特编码的latin1字符集</span><br><span class="line">character-<span class="keyword">set</span>-server=utf8</span><br><span class="line"># 创建新表时将使用的默认存储引擎</span><br><span class="line">default-storage-engine=INNODB</span><br><span class="line">lower_case_table_names=<span class="number">1</span></span><br><span class="line">max_allowed_packet=<span class="number">16</span>M</span><br><span class="line">socket=/usr/local/mysql/mysql.sock</span><br><span class="line">symbolic-links=<span class="number">0</span></span><br><span class="line">[client]</span><br><span class="line">port=<span class="number">3306</span></span><br><span class="line">socket=/usr/local/mysql/mysql.sock</span><br><span class="line">!includedir /etc/my.<span class="keyword">cnf</span>.d</span><br></pre></td></tr></table></figure>
-
-<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入bin目录</span></span><br><span class="line"><span class="built_in">cd</span> /usr/local/mysql/mysql-8.0.28-linux-glibc2.12-x86_64/bin/</span><br><span class="line">./mysqld --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql/mysql-8.0.28-linux-glibc2.12-x86_64 --datadir=/usr/local/mysql/mysql-8.0.28-linux-glibc2.12-x86_64/data/ --user=maffy --initialize</span><br></pre></td></tr></table></figure>
-
-<p>此时，如果linux环境缺少<code>libaio.so.1</code>，会报错<code>./mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory</code>，安装方式如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install -y libaio.so.1</span><br><span class="line"><span class="comment"># 上面不成功则，yum install -y libaio</span></span><br></pre></td></tr></table></figure>
-
-<p>成功初始化后记住初始密码</p>
-<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/25-11-32-43-QQ_1727235157352.png"></p>
-<h3 id="加入系统服务"><a href="#加入系统服务" class="headerlink" title="加入系统服务"></a>加入系统服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> /usr/local/mysql/mysql-8.0.28-linux-glibc2.12-x86_64/support-files/mysql.server /etc/init.d/mysql</span><br><span class="line"><span class="built_in">sudo</span> chkconfig --add mysql</span><br></pre></td></tr></table></figure>
-
-<h3 id="启动MySQL"><a href="#启动MySQL" class="headerlink" title="启动MySQL"></a>启动MySQL</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services mysql start</span><br></pre></td></tr></table></figure>
-
-<h3 id="修改密码"><a href="#修改密码" class="headerlink" title="修改密码"></a>修改密码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入mysql</span></span><br><span class="line">./mysql -u root -p</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 修改密码</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">user</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> identified <span class="keyword">by</span> <span class="string">&#x27;root&#x27;</span>;</span><br><span class="line"># 刷新权限</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
-
-<h3 id="远程访问"><a href="#远程访问" class="headerlink" title="远程访问"></a>远程访问</h3><p>使用修改的密码重新登录，输入下面的命令</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 新建用户</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">user</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;%&#x27;</span> identified <span class="keyword">with</span> mysql_native_password <span class="keyword">by</span> <span class="string">&#x27;root&#x27;</span>;</span><br><span class="line"><span class="keyword">grant</span> <span class="keyword">all</span> privileges <span class="keyword">on</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">to</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;%&#x27;</span>;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
-
-<p>如果还是无法登录，检查防火墙是否开发3306端口</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查防火墙是否启动</span></span><br><span class="line"><span class="built_in">sudo</span> firewall-cmd --state</span><br><span class="line"><span class="comment"># 如未开启 则开启防火墙 </span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start firewalld</span><br><span class="line"><span class="comment"># 查看开启的端口</span></span><br><span class="line"><span class="built_in">sudo</span> firewall-cmd --permanent --zone=public --list-ports</span><br><span class="line"><span class="comment"># 8080没开启 则开启</span></span><br><span class="line"><span class="built_in">sudo</span> firewall-cmd --zone=public --add-port=3306/tcp --permanent</span><br><span class="line"><span class="comment"># 重启防火墙</span></span><br><span class="line"><span class="built_in">sudo</span> firewall-cmd --reload</span><br></pre></td></tr></table></figure>
-
+          <p class="article-more-link">
+            <a href="/2024/09/25/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Linux-%E5%AE%89%E8%A3%85MySQL/#more">继续阅读全文 »</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
@@ -179,113 +143,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <!-- Table of Contents -->
-        
-        <span id="more"></span>
-
-<blockquote>
+        <blockquote>
 <p>Ubuntu安装FastDFS。一共4个包 fastdfs、fastdfs-nginx-module、libfastcommon、libserverframe 同时还有 nginx</p>
 </blockquote>
-<h2 id="下载安装包"><a href="#下载安装包" class="headerlink" title="下载安装包"></a>下载安装包</h2><ul>
-<li><p>FastDFS仓库地址：<a target="_blank" rel="noopener" href="https://github.com/happyfish100">happyfish100 (YuQing) · GitHub</a></p>
-</li>
-<li><p>一共4个包：<code>fastdfs</code>、<code>fastdfs-nginx-module</code>、<code>libfastcommon</code>、<code>libserverframe</code></p>
-</li>
-<li><p>此外还要安装Nginx，下载地址：<a target="_blank" rel="noopener" href="http://nginx.org/en/download.html">nginx: download</a></p>
-</li>
-<li><p>将下载的安装包上传到Ubuntu</p>
-</li>
-</ul>
-<h2 id="安装libfastcommon-1-0-74"><a href="#安装libfastcommon-1-0-74" class="headerlink" title="安装libfastcommon 1.0.74"></a>安装libfastcommon 1.0.74</h2><ol>
-<li><p>解压</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf libfastcommon-1.0.74.tar.gz</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>编译</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> libfastcommon-1.0.74/</span><br><span class="line">./make.sh</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ./make.sh install</span><br></pre></td></tr></table></figure>
-
-<p>如果没有安装make，需要先安装</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install -y gcc automake autoconf libtool make</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="安装libserverframe-1-2-4"><a href="#安装libserverframe-1-2-4" class="headerlink" title="安装libserverframe 1.2.4"></a>安装libserverframe 1.2.4</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 解压</span></span><br><span class="line">tar -zxvf libserverframe-1.2.4.tar.gz</span><br><span class="line"><span class="comment"># 编译</span></span><br><span class="line"><span class="built_in">cd</span> libserverframe-1.2.4/</span><br><span class="line">./make.sh</span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line"><span class="built_in">sudo</span> ./make.sh install</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装fastdfs-6-12-1"><a href="#安装fastdfs-6-12-1" class="headerlink" title="安装fastdfs 6.12.1"></a>安装fastdfs 6.12.1</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 解压</span></span><br><span class="line">tar -zxvf fastdfs-6.12.1.tar.gz</span><br><span class="line"><span class="comment"># 编译</span></span><br><span class="line"><span class="built_in">cd</span> fastdfs-6.12.1/</span><br><span class="line">./make.sh</span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line"><span class="built_in">sudo</span> ./make.sh install</span><br><span class="line"><span class="comment"># 拷贝http.conf、mime.types到 /etc/fdfs</span></span><br><span class="line"><span class="built_in">cd</span> conf/</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> http.conf /etc/fdfs/</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> mime.types /etc/fdfs/</span><br></pre></td></tr></table></figure>
-
-<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><h4 id="tracker-conf"><a href="#tracker-conf" class="headerlink" title="tracker.conf"></a>tracker.conf</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/fdfs/</span><br><span class="line"><span class="built_in">sudo</span> vim tracker.conf</span><br></pre></td></tr></table></figure>
-
-<p>修改<code>base_path</code></p>
-<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/23-10-54-41-QQ_1727060047226.png"></p>
-<h4 id="storage-conf"><a href="#storage-conf" class="headerlink" title="storage.conf"></a>storage.conf</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/fdfs/</span><br><span class="line"><span class="built_in">sudo</span> vim storage.conf</span><br></pre></td></tr></table></figure>
-
-<p>修改<code>base_path</code>、<code>store_path</code>、<code>tracker_server</code></p>
-<img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/23-11-10-50-QQ_1727061046757.png" title="" alt="" width="571">
-
-<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/23-11-11-34-QQ_1727061088948.png"></p>
-<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/23-11-30-28-QQ_1727062224668.png"></p>
-<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># fdfs_trackerd</span></span><br><span class="line"><span class="built_in">sudo</span> fdfs_trackerd /etc/fdfs/tracker.conf</span><br><span class="line"><span class="comment"># fdfs_storaged</span></span><br><span class="line"><span class="built_in">sudo</span> fdfs_storaged /etc/fdfs/storage.conf</span><br><span class="line"><span class="comment"># 检查是否启动成功</span></span><br><span class="line">ps -ef | grep fdfs</span><br></pre></td></tr></table></figure>
-
-<p>注意：trackerd.conf 配置的<code>base_path</code>和 storage.conf 配置的 <code>store_path0</code>需要手动创建文件夹，不然无法启动</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/fastdfs/tracker</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/fastdfs/storage/files</span><br></pre></td></tr></table></figure>
-
-<h3 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># fdfs_trackerd</span></span><br><span class="line"><span class="built_in">sudo</span> fdfs_trackerd /etc/fdfs/tracker.conf stop</span><br><span class="line"><span class="comment"># fdfs_storaged</span></span><br><span class="line"><span class="built_in">sudo</span> fdfs_storaged /etc/fdfs/storage.conf stop</span><br></pre></td></tr></table></figure>
-
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><h4 id="上传"><a href="#上传" class="headerlink" title="上传"></a>上传</h4><p>修改<code>client.conf</code>配置文件的<code>base_path</code>和<code>tracker_server</code>，该配置文件只在测试时使用</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/fdfs/</span><br><span class="line"><span class="built_in">sudo</span> vim client.conf</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/24-09-09-14-QQ_1727140146376.png"></p>
-<img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/24-09-12-57-QQ_1727140375076.png" title="" alt="" width="576">
-
-<p>记得创建<code>base_path</code>指定的文件夹</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> /opt/fastdfs/client</span><br></pre></td></tr></table></figure>
-
-<p>确保tracker和storaged启动成功</p>
-<img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/24-09-15-30-QQ_1727140528960.png" title="" alt="" width="583">
-
-<p>将准备好的测试文件<code>aa.txt</code>上传</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> fdfs_test /etc/fdfs/client.conf upload aa.txt</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/24-09-28-11-QQ_1727141283447.png"></p>
-<p>M00&#x2F;00&#x2F;00中的<code>M00</code>是指 storage.conf 中配置的store_path0；<code>00/00</code>是store_path0下的data文件夹下00文件夹下的00文件夹；<code>example file url</code>是文件的访问路径，默认不允许访问</p>
-<p>查看上传的文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/fastdfs/storage/files/data/00/00</span><br><span class="line">ll</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/24-09-35-33-QQ_1727141731489.png"></p>
-<p>上图中的<code>_big</code>为备份文件，但实际开发中不这样备份；<code>-m</code>存储文件相关信息；</p>
-<h4 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> fdfs_test /etc/fdfs/client.conf download group1 M00/00/00/rBBAgGbyFJWADMJBAAAAG7xqsgc698.txt</span><br></pre></td></tr></table></figure>
-
-<p>文件会下载到当前目录</p>
-<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><p>测试删除<code>_big</code>备份文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fdfs_test /etc/fdfs/client.conf delete group1 M00/00/00/rBBAgGbyFJWADMJBAAAAG7xqsgc698_big.txt</span><br></pre></td></tr></table></figure>
-
-<p>该命令会删除<code>_big</code>备份文件同时和它的<code>-m</code>文件</p>
-<h2 id="安装fastdfs-nginx-module-1-24"><a href="#安装fastdfs-nginx-module-1-24" class="headerlink" title="安装fastdfs-nginx-module-1.24"></a>安装fastdfs-nginx-module-1.24</h2><p><code>fastdfs-nginx-module</code>是nginx的拓展模块，需要在安装nginx时安装</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 解压 fastdfs-nginx-module，复制解压后其下的src目录 /home/maffy/Downloads/fastdfs-nginx-module-1.24/src</span></span><br><span class="line">tar -zxvf fastdfs-nginx-module-1.24.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将src下的配置文件 mod_fastdfs.conf 拷贝到 /etc/fdfs 目录下</span></span><br><span class="line"><span class="built_in">cd</span> fastdfs-nginx-module-1.24/src</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> mod_fastdfs.conf /etc/fdfs</span><br></pre></td></tr></table></figure>
-
-<h3 id="安装nginx"><a href="#安装nginx" class="headerlink" title="安装nginx"></a>安装nginx</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 解压 nginx</span></span><br><span class="line">tar -zxvf nginx-1.18.0.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 nginx 依赖，可以使用dpkg -l | grep xxx 查看是否安装</span></span><br><span class="line"><span class="built_in">sudo</span> apt install openssl libssl-dev   <span class="comment"># openssl</span></span><br><span class="line"><span class="built_in">sudo</span> apt install libpcre3 libpcre3-dev     <span class="comment">#pcre</span></span><br><span class="line"><span class="built_in">sudo</span> apt install zlib1g-dev    <span class="comment">#zlib</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置 nginx 指定 fdfs拓展的src</span></span><br><span class="line"><span class="built_in">cd</span> nginx-1.18.0</span><br><span class="line">./configure --prefix=/usr/local/nginx_fdfs --add-module=/home/maffy/Downloads/fastdfs-nginx-module-1.24/src</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译</span></span><br><span class="line">make</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line"><span class="built_in">sudo</span> make install</span><br></pre></td></tr></table></figure>
-
-<h3 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h3><h4 id="mod-fastdfs-conf"><a href="#mod-fastdfs-conf" class="headerlink" title="mod_fastdfs.conf"></a>mod_fastdfs.conf</h4><p>配置文件<code>mod_fastdfs.conf</code>中需要配置<code>base_path</code>和<code>tracker_server</code> <code>url_have_group_name</code> <code>store_path0</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/fdfs</span><br><span class="line"><span class="built_in">sudo</span> vim mod_fastdfs.conf</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/24-13-30-07-QQ_1727155805637.png"></p>
-<img title="" src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/24-13-32-21-QQ_1727155938935.png" alt="" width="550">
-
-<img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/24-13-34-46-QQ_1727156084688.png" title="" alt="" width="549">
-
-<img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/24-13-36-43-QQ_1727156199824.png" title="" alt="" width="551">
-
-<p>创建base_path指定的目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> /opt/fastdfs/nginx_mod</span><br></pre></td></tr></table></figure>
-
-<h4 id="nginx-conf"><a href="#nginx-conf" class="headerlink" title="nginx.conf"></a>nginx.conf</h4><p>配置nginx配置文件，添加一个location</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/nginx_fdfs/conf</span><br><span class="line"><span class="built_in">sudo</span> vim nginx.conf</span><br></pre></td></tr></table></figure>
-
-<img title="" src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/24-14-04-48-QQ_1727157884457.png" alt="" width="548">
-
-<p>测试配置文件，启动nginx</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 测试配置文件</span></span><br><span class="line"><span class="built_in">sudo</span> /usr/local/nginx_fdfs/sbin/nginx -c /usr/local/nginx_fdfs/conf/nginx.conf -t</span><br><span class="line"><span class="comment"># 启动nginx</span></span><br><span class="line"><span class="built_in">sudo</span> /usr/local/nginx_fdfs/sbin/nginx -c /usr/local/nginx_fdfs/conf/nginx.conf</span><br><span class="line"><span class="comment"># 查看是否启动了两个进程，如果不是，可以查看log文件排查问题</span></span><br><span class="line">ps -ef | grep nginx</span><br></pre></td></tr></table></figure>
-
+        
+          <p class="article-more-link">
+            <a href="/2024/09/23/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Ubuntu-%E5%AE%89%E8%A3%85FastDFS/#more">继续阅读全文 »</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
