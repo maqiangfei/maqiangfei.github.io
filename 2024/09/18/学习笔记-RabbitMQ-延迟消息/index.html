@@ -16,7 +16,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/picgo/QQ_1726659772070.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/picgo/QQ_1726664287814.png">
 <meta property="article:published_time" content="2024-09-18T04:43:50.000Z">
-<meta property="article:modified_time" content="2024-09-22T08:57:39.554Z">
+<meta property="article:modified_time" content="2024-09-27T01:37:57.461Z">
 <meta property="article:author" content="maqiangfei">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="RabbitMQ">
@@ -108,13 +108,13 @@
 </blockquote>
 <span id="more"></span>
 
-<h2 id="死信交换机"><a href="#死信交换机" class="headerlink" title="死信交换机"></a>死信交换机</h2><p>当一个队列中的消息满足下列情况之一时，就会成为死信（dead letter）：</p>
+<h2 id="死信交换机"><a href="#死信交换机" class="headerlink" title="死信交换机"></a>死信交换机</h2><p>当一个队列中的消息满足下列情况之一时，就会成为死信（<code>dead letter</code>）：</p>
 <ul>
-<li><p>消费者使用basic.reject或basic.nack声明消费失败，并且消息的requeue参数设置为false</p>
+<li><p>消费者使用<code>basic.reject</code>或<code>basic.nack</code>声明消费失败，并且消息的<code>requeue</code>参数设置为<code>false</code></p>
 </li>
 <li><p>消息是一个过期消息（到达了队列或消息本身设置的过期时间），超时无人消费</p>
 </li>
-<li><p>要投递的队列消息堆积满了，最早的消息肯成为死信</p>
+<li><p>要投递的队列消息堆积满了，最早的消息可能成为死信</p>
 </li>
 </ul>
 <p>如果队列通过<code>dead-letter-exchange</code>属性指定了一个交换机，那么该队列中的死信就会投递到这个交换机中。这个交换机称为死信交换机（Dead Letter Exchange，简称DLX） </p>
@@ -125,7 +125,7 @@
 <p>发送消息时指定消息的过期时间</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testDLX</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">Message</span> <span class="variable">msg</span> <span class="operator">=</span> MessageBuilder</span><br><span class="line">            .withBody(<span class="string">&quot;hello&quot;</span>.getBytes(StandardCharsets.UTF_8))</span><br><span class="line">            .setExpiration(<span class="string">&quot;10000&quot;</span>).build();</span><br><span class="line">    rabbitTemplate.convertAndSend(<span class="string">&quot;demo.direct&quot;</span>, <span class="string">&quot;dl&quot;</span>, msg);</span><br><span class="line">    log.info(<span class="string">&quot;消息发送成功&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="延迟消息插件"><a href="#延迟消息插件" class="headerlink" title="延迟消息插件"></a>延迟消息插件</h2><p>RabbitMQ的官方推出了一个插件，原生支持延迟消息功能。该插件的原理是设计了一种支持延迟消息功能的交换机，当消息投递到交换机后可以暂存一定时间，到期后再投贷到队列。</p>
+<h2 id="延迟消息插件"><a href="#延迟消息插件" class="headerlink" title="延迟消息插件"></a>延迟消息插件</h2><p>RabbitMQ的官方推出了一个插件，原生支持延迟消息功能。该插件的原理是设计了一种支持延迟消息功能的交换机，当消息投递到交换机后可以暂存一定时间，到期后再投递到队列。</p>
 <p>安装插件后，在声明交换机时设置<code>delayed</code>属性为<code>true</code></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RabbitListener(bindings = @QueueBinding(</span></span><br><span class="line"><span class="meta">        value = @Queue(&quot;delay.queue&quot;),</span></span><br><span class="line"><span class="meta">        exchange = @Exchange(value = &quot;delay.direct&quot;, delayed = &quot;true&quot;),</span></span><br><span class="line"><span class="meta">        key = &quot;delay&quot;</span></span><br><span class="line"><span class="meta">))</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">delayQueueConsumer</span><span class="params">(String msg)</span> &#123;</span><br><span class="line">    log.info(<span class="string">&quot;接收到 delay.queue 的消息：&#123;&#125;&quot;</span>, msg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 

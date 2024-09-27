@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>学习笔记 - MyBatis XML映射器 | maqiangfei</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文总结mapper.xml文件中主要标签的使用，及参数传递、结果映射等">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习笔记 - MyBatis XML映射器">
+<meta property="og:url" content="https://maqiangfei.github.io/2024/07/16/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-MyBatis-XML%E6%98%A0%E5%B0%84%E5%99%A8/index.html">
+<meta property="og:site_name" content="maqiangfei">
+<meta property="og:description" content="本文总结mapper.xml文件中主要标签的使用，及参数传递、结果映射等">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-07-16T12:19:40.000Z">
+<meta property="article:modified_time" content="2024-09-27T09:57:36.687Z">
+<meta property="article:author" content="maqiangfei">
+<meta property="article:tag" content="MyBatis">
+<meta property="article:tag" content="ORM">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/" title="maqiangfei" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://maqiangfei.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">maqiangfei</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-学习笔记-MyBatis-XML映射器" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2024/07/16/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-MyBatis-XML%E6%98%A0%E5%B0%84%E5%99%A8/" class="article-date">
+  <time datetime="2024-07-16T12:19:40.000Z" itemprop="datePublished">2024-07-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      学习笔记 - MyBatis XML映射器
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <blockquote>
+<p>本文总结<code>mapper.xml</code>文件中主要标签的使用，及参数传递、结果映射等</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h2><p>SQL 映射文件只有很少的几个顶级元素</p>
+<ul>
+<li><code>cache</code> – 该命名空间的缓存配置。</li>
+<li><code>cache-ref</code> – 引用其它命名空间的缓存配置。</li>
+<li><code>resultMap</code> – 描述如何从数据库结果集中加载对象，是最复杂也是最强大的元素。</li>
+<li><code>sql</code> – 可被其它语句引用的可重用语句块。</li>
+<li><code>insert </code>– 映射插入语句。</li>
+<li><code>update</code> – 映射更新语句。</li>
+<li><code>delete</code> – 映射删除语句。</li>
+<li><code>select</code> – 映射查询语句。</li>
+</ul>
+<h2 id="select"><a href="#select" class="headerlink" title="select"></a>select</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">&lt;</span><span class="keyword">select</span> id<span class="operator">=</span>&quot;selectPerson&quot; parameterType<span class="operator">=</span>&quot;int&quot; resultType<span class="operator">=</span>&quot;hashmap&quot;<span class="operator">&gt;</span></span><br><span class="line">  <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> PERSON <span class="keyword">WHERE</span> ID <span class="operator">=</span> #&#123;id&#125;</span><br><span class="line"><span class="operator">&lt;</span><span class="operator">/</span><span class="keyword">select</span><span class="operator">&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="operator">&lt;</span><span class="keyword">select</span></span><br><span class="line">  id<span class="operator">=</span>&quot;selectPerson&quot;</span><br><span class="line">  parameterType<span class="operator">=</span>&quot;int&quot;</span><br><span class="line">  parameterMap<span class="operator">=</span>&quot;deprecated&quot;</span><br><span class="line">  resultType<span class="operator">=</span>&quot;hashmap&quot;</span><br><span class="line">  resultMap<span class="operator">=</span>&quot;personResultMap&quot;</span><br><span class="line">  flushCache<span class="operator">=</span>&quot;false&quot;</span><br><span class="line">  useCache<span class="operator">=</span>&quot;true&quot;</span><br><span class="line">  timeout<span class="operator">=</span>&quot;10&quot;</span><br><span class="line">  fetchSize<span class="operator">=</span>&quot;256&quot;</span><br><span class="line">  statementType<span class="operator">=</span>&quot;PREPARED&quot;</span><br><span class="line">  resultSetType<span class="operator">=</span>&quot;FORWARD_ONLY&quot;<span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>方法名，与命名空间的类名一同绑定Mapper接口的方法</td>
+</tr>
+<tr>
+<td><code>parameterType</code></td>
+<td><strong>可选</strong>，方法参数类型</td>
+</tr>
+<tr>
+<td><code>resultType</code></td>
+<td>方法返回类型，如果是List，指定内部元素类型，如果是Map则指定为<code>map</code></td>
+</tr>
+<tr>
+<td><code>resultMap</code></td>
+<td>结果映射，解决字段名不同、多对一、一对多，不能与resultType一同使用</td>
+</tr>
+<tr>
+<td><code>flushCache</code></td>
+<td>默认false，开启后该语句被调用则清空本地缓存和二级缓存</td>
+</tr>
+<tr>
+<td><code>useCache</code></td>
+<td>select元素默认为true，开启后语句执行结果被二级缓存缓存</td>
+</tr>
+<tr>
+<td><code>statementType</code></td>
+<td>可选<code>STATEMENT</code>，<code>PREPARED</code>或<code>CALLABLE</code></td>
+</tr>
+</tbody></table>
+<p>全部属性请参考：<a target="_blank" rel="noopener" href="https://mybatis.net.cn/sqlmap-xml.html#Parameters">MyBatis中文网</a></p>
+<h2 id="insert｜update-delete"><a href="#insert｜update-delete" class="headerlink" title="insert｜update|delete"></a>insert｜update|delete</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;insertAuthor&quot;</span>&gt;</span></span><br><span class="line">  insert into Author (id,username,password,email,bio)</span><br><span class="line">  values (#&#123;id&#125;,#&#123;username&#125;,#&#123;password&#125;,#&#123;email&#125;,#&#123;bio&#125;)</span><br><span class="line"><span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">insert</span></span></span><br><span class="line"><span class="tag">  <span class="attr">id</span>=<span class="string">&quot;insertAuthor&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">parameterType</span>=<span class="string">&quot;domain.blog.Author&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">flushCache</span>=<span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">statementType</span>=<span class="string">&quot;PREPARED&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">keyProperty</span>=<span class="string">&quot;&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">keyColumn</span>=<span class="string">&quot;&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">useGeneratedKeys</span>=<span class="string">&quot;&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">timeout</span>=<span class="string">&quot;20&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">update</span> <span class="attr">id</span>=<span class="string">&quot;updateAuthor&quot;</span>&gt;</span></span><br><span class="line">  update Author set</span><br><span class="line">    username = #&#123;username&#125;,</span><br><span class="line">    password = #&#123;password&#125;,</span><br><span class="line">    email = #&#123;email&#125;,</span><br><span class="line">    bio = #&#123;bio&#125;</span><br><span class="line">  where id = #&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">update</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">update</span></span></span><br><span class="line"><span class="tag">  <span class="attr">id</span>=<span class="string">&quot;updateAuthor&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">parameterType</span>=<span class="string">&quot;domain.blog.Author&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">flushCache</span>=<span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">statementType</span>=<span class="string">&quot;PREPARED&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">timeout</span>=<span class="string">&quot;20&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">&quot;deleteAuthor&quot;</span>&gt;</span></span><br><span class="line">  delete from Author where id = #&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">delete</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">delete</span></span></span><br><span class="line"><span class="tag">  <span class="attr">id</span>=<span class="string">&quot;deleteAuthor&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">parameterType</span>=<span class="string">&quot;domain.blog.Author&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">flushCache</span>=<span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">statementType</span>=<span class="string">&quot;PREPARED&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">timeout</span>=<span class="string">&quot;20&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>useGeneratedKeys</code></td>
+<td>默认false（仅适用于 insert 和 update），使方法返回值由原来的影响行数变为主键id</td>
+</tr>
+<tr>
+<td><code>keyProperty</code></td>
+<td>（仅适用于 insert 和 update），指定POJO的主键属性名</td>
+</tr>
+<tr>
+<td><code>keyColumn</code></td>
+<td>（仅适用于 insert 和 update），指定数据表的主键字段名</td>
+</tr>
+</tbody></table>
+<h2 id="sql"><a href="#sql" class="headerlink" title="sql"></a>sql</h2><p>这个元素可以用来定义可重用的 SQL 代码片段，以便在其它语句中使用。</p>
+<p>定义：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">sql</span> <span class="attr">id</span>=<span class="string">&quot;userColumns&quot;</span>&gt;</span> $&#123;alias&#125;.id,$&#123;alias&#125;.username,$&#123;alias&#125;.password <span class="tag">&lt;/<span class="name">sql</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>使用：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectUsers&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;map&quot;</span>&gt;</span></span><br><span class="line">  select</span><br><span class="line">    <span class="tag">&lt;<span class="name">include</span> <span class="attr">refid</span>=<span class="string">&quot;userColumns&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;alias&quot;</span> <span class="attr">value</span>=<span class="string">&quot;t1&quot;</span>/&gt;</span><span class="tag">&lt;/<span class="name">include</span>&gt;</span>,</span><br><span class="line">    <span class="tag">&lt;<span class="name">include</span> <span class="attr">refid</span>=<span class="string">&quot;userColumns&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;alias&quot;</span> <span class="attr">value</span>=<span class="string">&quot;t2&quot;</span>/&gt;</span><span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">  from some_table t1</span><br><span class="line">    cross join some_table t2</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><h3 id="占位符"><a href="#占位符" class="headerlink" title="占位符"></a>占位符</h3><ul>
+<li><p><code>#&#123;&#125;</code>，将其替换为<code>？</code>，防止sql注入</p>
+</li>
+<li><p><code>$&#123;&#125;</code>，将其直接替换成参数</p>
+</li>
+</ul>
+<h3 id="单个参数"><a href="#单个参数" class="headerlink" title="单个参数"></a>单个参数</h3><p>都可以不使用<code>@Param</code>注解</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>使用方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>基本类型</code></td>
+<td>直接使用</td>
+</tr>
+<tr>
+<td><code>POJO</code></td>
+<td>直接使用，属性名和参数占位符名称一致</td>
+</tr>
+<tr>
+<td><code>Map</code></td>
+<td>直接使用，键名和参数占位符名称一致</td>
+</tr>
+<tr>
+<td><code>Collection</code></td>
+<td>底层封装为Map<br/>键名：arg0 | collection<br/>map.put(“arg0”, 集合)<br/>map.put(“collection”, 集合)</td>
+</tr>
+<tr>
+<td><code>List</code></td>
+<td>底层封装为Map<br/>map.put(“arg0”, 集合)<br/>map.put(“collection”, 集合)<br/>map.put(“list”, 集合)</td>
+</tr>
+<tr>
+<td><code>Array</code></td>
+<td>底层封装为Map<br/>map.put(“arg0”, 数组)<br/>map.put(“array”, 数组)</td>
+</tr>
+</tbody></table>
+<h3 id="多个参数"><a href="#多个参数" class="headerlink" title="多个参数"></a>多个参数</h3><ul>
+<li><p>底层封装为Map集合</p>
+</li>
+<li><p>第一个参数键名：<code>arg0</code> | <code>param1</code></p>
+</li>
+<li><p>第二个参数键名：<code>arg1</code> | <code>param2</code></p>
+</li>
+<li><p>……</p>
+</li>
+<li><p>使用<code>@Param()</code>来替换<code>arg</code>的键名</p>
+</li>
+</ul>
+<h3 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h3><ul>
+<li><p>一个非数组或集合参数时不写<code>@Param</code></p>
+</li>
+<li><p>一个数组集合参数时写<code>@Param</code></p>
+</li>
+<li><p>引用类型属性与占位符一致</p>
+</li>
+<li><p><code>map</code>类型键名与占位符一致</p>
+</li>
+<li><p>多个参数时写<code>@Param</code></p>
+</li>
+</ul>
+<h2 id="结果映射"><a href="#结果映射" class="headerlink" title="结果映射"></a>结果映射</h2><h3 id="resultType"><a href="#resultType" class="headerlink" title="resultType"></a>resultType</h3><p><code>resultType</code>用于指定方法返回值的类型，不同返回值类型指定方式如下：</p>
+<ul>
+<li><p><code>基本类型</code>：resultType&#x3D;基本类型，默认写全限定名，可以指定别名</p>
+</li>
+<li><p><code>List类型</code>：resultType&#x3D;List中元素的类型</p>
+</li>
+<li><p><code>Map类型</code>：resultType&#x3D;<code>map</code></p>
+</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectUsers&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.someapp.model.User&quot;</span>&gt;</span></span><br><span class="line">  select id, username, hashedPassword</span><br><span class="line">  from some_table</span><br><span class="line">  where id = #&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的代码中，<code>resultType</code>属性指定了返回类型，MyBatis会自动根据属性名将查询结果映射到 JavaBean 的属性上。可以开启<code>下划线驼峰映射</code>，如果列名和属性名还是不匹配有两种解决方法：</p>
+<ol>
+<li><p>编写SQL语句是给列取别名</p>
+</li>
+<li><p>使用<code>ResultMap</code>标签来显示配置映射关系</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;userResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;User&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;user_id&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;username&quot;</span> <span class="attr">column</span>=<span class="string">&quot;user_name&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;password&quot;</span> <span class="attr">column</span>=<span class="string">&quot;hashed_password&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>使用时通过<code>resultMap</code>属性来指定对应的<code>id</code>名称</p>
+</li>
+</ol>
+<h3 id="resultMap"><a href="#resultMap" class="headerlink" title="resultMap"></a>resultMap</h3><p><code>resultMap</code>有许多的子元素，下面是一个较复杂的案例演示</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 非常复杂的结果映射 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;detailedBlogResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Blog&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">constructor</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">idArg</span> <span class="attr">column</span>=<span class="string">&quot;blog_id&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;int&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">constructor</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;title&quot;</span> <span class="attr">column</span>=<span class="string">&quot;blog_title&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">&quot;author&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;Author&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;author_id&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;username&quot;</span> <span class="attr">column</span>=<span class="string">&quot;author_username&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;password&quot;</span> <span class="attr">column</span>=<span class="string">&quot;author_password&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;email&quot;</span> <span class="attr">column</span>=<span class="string">&quot;author_email&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;bio&quot;</span> <span class="attr">column</span>=<span class="string">&quot;author_bio&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;favouriteSection&quot;</span> <span class="attr">column</span>=<span class="string">&quot;author_favourite_section&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">association</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">&quot;posts&quot;</span> <span class="attr">ofType</span>=<span class="string">&quot;Post&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;post_id&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;subject&quot;</span> <span class="attr">column</span>=<span class="string">&quot;post_subject&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">&quot;author&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;Author&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">&quot;comments&quot;</span> <span class="attr">ofType</span>=<span class="string">&quot;Comment&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;comment_id&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">collection</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">&quot;tags&quot;</span> <span class="attr">ofType</span>=<span class="string">&quot;Tag&quot;</span> &gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;tag_id&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">collection</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">discriminator</span> <span class="attr">javaType</span>=<span class="string">&quot;int&quot;</span> <span class="attr">column</span>=<span class="string">&quot;draft&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">case</span> <span class="attr">value</span>=<span class="string">&quot;1&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;DraftPost&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">discriminator</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">collection</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>resultMap</code>常用子元素如下：</p>
+<ul>
+<li><code>constructor</code> - 用于在实例化类时，注入结果到构造方法中<ul>
+<li><code>idArg</code> - 主键字段作为参数；标记出主键可以帮助提高整体性能</li>
+<li><code>arg</code> - 普通字段作为参数</li>
+</ul>
+</li>
+<li><code>id</code> – 建立主键字段与 JavaBean 属性的映射；标记出主键可以帮助提高整体性能</li>
+<li><code>result</code> – 建立普通字段与 JavaBean 属性的映射</li>
+<li><code>association</code> – 关联：将<code>一条记录的多个字段</code>包装成一个对象作为单个属性<ul>
+<li>嵌套结果映射 – 关联可以是 resultMap 元素，或是对其它结果映射的引用</li>
+</ul>
+</li>
+<li><code>collection</code> – 集合：将<code>多条记录的一部分字段</code>收集为一个集合作为单个属性<ul>
+<li>嵌套结果映射 – 集合可以是 resultMap 元素，或是对其它结果映射的引用</li>
+</ul>
+</li>
+<li><code>discriminator</code> – 使用结果值来决定使用哪个 resultMap<ul>
+<li><code>case</code> – 基于某些值的结果映射</li>
+</ul>
+</li>
+</ul>
+<h4 id="constructor-NaN"><a href="#constructor-NaN" class="headerlink" title="constructor"></a>constructor</h4><p><code>constructor</code>用于将查询结果的字段作为构造器参数来创建 JavaBean</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">   <span class="keyword">public</span> <span class="title function_">User</span><span class="params">(Integer id, String username, <span class="type">int</span> age)</span> &#123;</span><br><span class="line">     <span class="comment">//...</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">constructor</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">idArg</span> <span class="attr">column</span>=<span class="string">&quot;id&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;int&quot;</span>/&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">arg</span> <span class="attr">column</span>=<span class="string">&quot;username&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;String&quot;</span>/&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">arg</span> <span class="attr">column</span>=<span class="string">&quot;age&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;_int&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">constructor</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：参数必须按照构造器顺序给出，从版本<code>3.4.3</code>开始可以在构造器使用<code>@Param</code>指定参数名并在arg标签指定<code>name</code>属性从而任意顺序</p>
+<h4 id="association"><a href="#association" class="headerlink" title="association"></a>association</h4><p><code>association</code>用于将<code>一条记录的多个字段</code>包装成一个对象作为单个属性</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">&quot;author&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;Author&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;author_id&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;username&quot;</span> <span class="attr">column</span>=<span class="string">&quot;author_username&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">association</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>property</code></td>
+<td>对应JavaBean中引用类型的属性</td>
+</tr>
+<tr>
+<td><code>javaType</code></td>
+<td>对应proerty的类型</td>
+</tr>
+<tr>
+<td><code>column</code></td>
+<td>指定<code>嵌套查询</code>或<code>嵌套结果映射</code>作为条件的字段</td>
+</tr>
+<tr>
+<td><code>select</code></td>
+<td>指定<code>嵌套查询</code>所嵌套的<code>select</code>标签的id</td>
+</tr>
+<tr>
+<td><code>resultMap</code></td>
+<td>指定<code>嵌套结果映射</code>所嵌套的<code>resultMap</code>的id</td>
+</tr>
+<tr>
+<td><code>columnPrefix</code></td>
+<td>配合<code>resultMap</code>使用，给其所有的<code>column</code>加前缀</td>
+</tr>
+</tbody></table>
+<p><strong>嵌套select查询</strong>：不推荐，存在<code>N+1 查询问题</code>（1个SQL语句要为其N条记录都执行一条select），代码演示如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;blogResult&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Blog&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">&quot;author&quot;</span> <span class="attr">column</span>=<span class="string">&quot;author_id&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;Author&quot;</span> <span class="attr">select</span>=<span class="string">&quot;selectAuthor&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectAuthor&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;Author&quot;</span>&gt;</span></span><br><span class="line">  SELECT * FROM AUTHOR WHERE ID = #&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>嵌套结果映射</strong>：将<code>association</code>标签中的映射关系抽取为一个<code>resultMap</code>，然后指向它，代码演示如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;blogResult&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Blog&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;blog_id&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;title&quot;</span> <span class="attr">column</span>=<span class="string">&quot;blog_title&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">&quot;author&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;Author&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;authorResult&quot;</span> <span class="attr">columnPrefix</span>=<span class="string">&quot;author_&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;authorResult&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Author&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;id&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;username&quot;</span> <span class="attr">column</span>=<span class="string">&quot;username&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;password&quot;</span> <span class="attr">column</span>=<span class="string">&quot;password&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;email&quot;</span> <span class="attr">column</span>=<span class="string">&quot;email&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;bio&quot;</span> <span class="attr">column</span>=<span class="string">&quot;bio&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上述代码将<code>authorResult</code>抽取出来从而实现代码的重用，使用时通过<code>columnPrefix</code>属性为其所有<code>column</code>添加前缀</p>
+<h4 id="collection"><a href="#collection" class="headerlink" title="collection"></a>collection</h4><p><code>collection</code>用于将<code>多条记录的一部分字段</code>收集为一个集合作为单个属性</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">&quot;posts&quot;</span> <span class="attr">ofType</span>=<span class="string">&quot;domain.blog.Post&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;post_id&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;subject&quot;</span> <span class="attr">column</span>=<span class="string">&quot;post_subject&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;body&quot;</span> <span class="attr">column</span>=<span class="string">&quot;post_body&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">collection</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其<code>嵌套select查询</code>和<code>嵌套结果映射</code>与<code>association</code>相似</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;blogResult&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Blog&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">&quot;posts&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;ArrayList&quot;</span> <span class="attr">column</span>=<span class="string">&quot;id&quot;</span> <span class="attr">ofType</span>=<span class="string">&quot;Post&quot;</span> <span class="attr">select</span>=<span class="string">&quot;selectPostsForBlog&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectPostsForBlog&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;Post&quot;</span>&gt;</span></span><br><span class="line">  SELECT * FROM POST WHERE BLOG_ID = #&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;blogResult&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Blog&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;blog_id&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;title&quot;</span> <span class="attr">column</span>=<span class="string">&quot;blog_title&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">&quot;posts&quot;</span> <span class="attr">ofType</span>=<span class="string">&quot;Post&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;blogPostResult&quot;</span> <span class="attr">columnPrefix</span>=<span class="string">&quot;post_&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;blogPostResult&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Post&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;id&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;subject&quot;</span> <span class="attr">column</span>=<span class="string">&quot;subject&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;body&quot;</span> <span class="attr">column</span>=<span class="string">&quot;body&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="discriminator"><a href="#discriminator" class="headerlink" title="discriminator"></a>discriminator</h4><p><code>discriminator</code>（鉴别器）用于根据字段的结果选择性地与 JavaBean 进行映射</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;vehicleResult&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Vehicle&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;id&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;vin&quot;</span> <span class="attr">column</span>=<span class="string">&quot;vin&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;year&quot;</span> <span class="attr">column</span>=<span class="string">&quot;year&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;make&quot;</span> <span class="attr">column</span>=<span class="string">&quot;make&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;model&quot;</span> <span class="attr">column</span>=<span class="string">&quot;model&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;color&quot;</span> <span class="attr">column</span>=<span class="string">&quot;color&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">discriminator</span> <span class="attr">javaType</span>=<span class="string">&quot;int&quot;</span> <span class="attr">column</span>=<span class="string">&quot;vehicle_type&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">case</span> <span class="attr">value</span>=<span class="string">&quot;1&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;Car&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;doorCount&quot;</span> <span class="attr">column</span>=<span class="string">&quot;door_count&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">case</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">case</span> <span class="attr">value</span>=<span class="string">&quot;2&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;Truck&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;boxSize&quot;</span> <span class="attr">column</span>=<span class="string">&quot;box_size&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;extendedCab&quot;</span> <span class="attr">column</span>=<span class="string">&quot;extended_cab&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">case</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">case</span> <span class="attr">value</span>=<span class="string">&quot;3&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;Van&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;powerSlidingDoor&quot;</span> <span class="attr">column</span>=<span class="string">&quot;power_sliding_door&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">case</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">case</span> <span class="attr">value</span>=<span class="string">&quot;4&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;Suv&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;allWheelDrive&quot;</span> <span class="attr">column</span>=<span class="string">&quot;all_wheel_drive&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">case</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">discriminator</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以<code>嵌套结果映射</code>，如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;vehicleResult&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Vehicle&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;id&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;vin&quot;</span> <span class="attr">column</span>=<span class="string">&quot;vin&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;year&quot;</span> <span class="attr">column</span>=<span class="string">&quot;year&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;make&quot;</span> <span class="attr">column</span>=<span class="string">&quot;make&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;model&quot;</span> <span class="attr">column</span>=<span class="string">&quot;model&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;color&quot;</span> <span class="attr">column</span>=<span class="string">&quot;color&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">discriminator</span> <span class="attr">javaType</span>=<span class="string">&quot;int&quot;</span> <span class="attr">column</span>=<span class="string">&quot;vehicle_type&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">case</span> <span class="attr">value</span>=<span class="string">&quot;1&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;carResult&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">case</span> <span class="attr">value</span>=<span class="string">&quot;2&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;truckResult&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">case</span> <span class="attr">value</span>=<span class="string">&quot;3&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;vanResult&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">case</span> <span class="attr">value</span>=<span class="string">&quot;4&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;suvResult&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">discriminator</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;carResult&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Car&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;doorCount&quot;</span> <span class="attr">column</span>=<span class="string">&quot;door_count&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://maqiangfei.github.io/2024/07/16/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-MyBatis-XML%E6%98%A0%E5%B0%84%E5%99%A8/" data-id="cm1jff5oa0006slfy6pmxcfid" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ORM/" rel="tag">ORM</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+    <a href="/2024/07/16/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-MyBatis-%E5%8A%A8%E6%80%81SQL/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          学习笔记 - MyBatis 动态SQL
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/07/16/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-MyBatis-%E5%85%A5%E9%97%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">学习笔记 - MyBatis 入门</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E7%AD%BE"><span class="toc-number">1.</span> <span class="toc-text">标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#select"><span class="toc-number">2.</span> <span class="toc-text">select</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#insert%EF%BD%9Cupdate-delete"><span class="toc-number">3.</span> <span class="toc-text">insert｜update|delete</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sql"><span class="toc-number">4.</span> <span class="toc-text">sql</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E6%95%B0"><span class="toc-number">5.</span> <span class="toc-text">参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%A0%E4%BD%8D%E7%AC%A6"><span class="toc-number">5.1.</span> <span class="toc-text">占位符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E4%B8%AA%E5%8F%82%E6%95%B0"><span class="toc-number">5.2.</span> <span class="toc-text">单个参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E4%B8%AA%E5%8F%82%E6%95%B0"><span class="toc-number">5.3.</span> <span class="toc-text">多个参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-number">5.4.</span> <span class="toc-text">最佳实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C%E6%98%A0%E5%B0%84"><span class="toc-number">6.</span> <span class="toc-text">结果映射</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#resultType"><span class="toc-number">6.1.</span> <span class="toc-text">resultType</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#resultMap"><span class="toc-number">6.2.</span> <span class="toc-text">resultMap</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#constructor-NaN"><span class="toc-number">6.2.1.</span> <span class="toc-text">constructor</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#association"><span class="toc-number">6.2.2.</span> <span class="toc-text">association</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#collection"><span class="toc-number">6.2.3.</span> <span class="toc-text">collection</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#discriminator"><span class="toc-number">6.2.4.</span> <span class="toc-text">discriminator</span></a></li></ol></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2024 maqiangfei&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;qiangfei.ma@qq.com
+    </div>
+  </div>
+</footer>
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ 
+<script src="/js/is.js"></script>
+
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/elevator.js"></script>
+
+  </div>
+</body>
+</html>
