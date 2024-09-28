@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>学习笔记 - MyBatis-Plus 高级 | maqiangfei</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文介绍MP的逻辑删除、枚举映射、Json映射以及分页插件，具体请参考官网简介 | MyBatis-Plus">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习笔记 - MyBatis-Plus 高级">
+<meta property="og:url" content="https://maqiangfei.github.io/2024/09/28/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-MyBatis-Plus-%E9%AB%98%E7%BA%A7/index.html">
+<meta property="og:site_name" content="maqiangfei">
+<meta property="og:description" content="本文介绍MP的逻辑删除、枚举映射、Json映射以及分页插件，具体请参考官网简介 | MyBatis-Plus">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-09-28T11:31:53.000Z">
+<meta property="article:modified_time" content="2024-09-28T14:23:51.230Z">
+<meta property="article:author" content="maqiangfei">
+<meta property="article:tag" content="ORM">
+<meta property="article:tag" content="MyBatis-Plus">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/" title="maqiangfei" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://maqiangfei.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">maqiangfei</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-学习笔记-MyBatis-Plus-高级" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2024/09/28/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-MyBatis-Plus-%E9%AB%98%E7%BA%A7/" class="article-date">
+  <time datetime="2024-09-28T11:31:53.000Z" itemprop="datePublished">2024-09-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      学习笔记 - MyBatis-Plus 高级
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <blockquote>
+<p>本文介绍<code>MP</code>的<code>逻辑删除</code>、<code>枚举映射</code>、<code>Json映射</code>以及<code>分页插件</code>，具体请参考官网<a target="_blank" rel="noopener" href="https://baomidou.com/introduce/">简介 | MyBatis-Plus</a></p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="逻辑删除"><a href="#逻辑删除" class="headerlink" title="逻辑删除"></a>逻辑删除</h2><p>逻辑删除是一种数据管理策略，通过一个表字段标记该记录是否被删除。<code>MyBatis-Plus</code>提供了便捷的逻辑删除支持，请参考<a target="_blank" rel="noopener" href="https://baomidou.com/guides/logic-delete/">逻辑删除支持 | MyBatis-Plus</a></p>
+<h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><p>MyBatis-Plus 的逻辑删除功能会在执行数据库操作时自动处理逻辑删除字段。</p>
+<ul>
+<li><strong>插入</strong>：逻辑删除字段的值不受限制。</li>
+<li><strong>查找</strong>：自动添加条件，过滤掉标记为已删除的记录。<ul>
+<li>例：<code>select id,name,deleted from user where deleted=0</code></li>
+</ul>
+</li>
+<li><strong>更新</strong>：防止更新已删除的记录。</li>
+<li><strong>删除</strong>：将删除操作转换为更新操作，标记记录为已删除。<ul>
+<li>例：<code>update user set deleted=1 where id = 1 and deleted=0</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="支持的数据类型"><a href="#支持的数据类型" class="headerlink" title="支持的数据类型"></a>支持的数据类型</h3><p>逻辑删除字段支持所有数据类型，但推荐使用 <code>Integer</code>、<code>Boolean</code> 或 <code>LocalDateTime</code>。如果使用 <code>datetime</code> 类型，可以配置逻辑未删除值为 <code>null</code>，已删除值可以使用函数如 <code>now()</code> 来获取当前时间。</p>
+<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><ol>
+<li><p>配置类中开启逻辑删除</p>
+<p><code>application.yml</code></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">mybatis-plus:</span></span><br><span class="line">  <span class="attr">type-aliases-package:</span> <span class="string">com.maffy.pojo</span>    <span class="comment"># 别名扫描包（xml返回类型不用写全限定名）</span></span><br><span class="line">  <span class="attr">mapper-locations:</span> <span class="string">&quot;classpath*:/mapper/**/*.xml&quot;</span>    <span class="comment"># Mapper.xml文件地址，默认值</span></span><br><span class="line">  <span class="attr">configuration:</span></span><br><span class="line">    <span class="attr">map-underscore-to-camel-case:</span> <span class="literal">true</span>   <span class="comment"># 是否开启下划线驼峰映射</span></span><br><span class="line">    <span class="attr">cache-enabled:</span> <span class="literal">false</span>   <span class="comment"># 是否开启二级缓存</span></span><br><span class="line">    <span class="attr">default-enum-type-handler:</span> <span class="string">com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler</span></span><br><span class="line">  <span class="attr">global-config:</span></span><br><span class="line">    <span class="attr">db-config:</span></span><br><span class="line">      <span class="attr">id-type:</span> <span class="string">auto</span>   <span class="comment"># id生成策略：默认是assign_id 雪花算法</span></span><br><span class="line">      <span class="attr">update-strategy:</span> <span class="string">not_null</span>    <span class="comment"># 更新策略：只更新非空字段</span></span><br><span class="line">      <span class="attr">logic-delete-field:</span> <span class="string">deleted</span>  <span class="comment"># 逻辑删除对应字段</span></span><br><span class="line">      <span class="attr">logic-delete-value:</span> <span class="number">1</span>        <span class="comment"># 逻辑删除值</span></span><br><span class="line">      <span class="attr">logic-not-delete-value:</span> <span class="number">0</span>    <span class="comment"># 逻辑没删除值</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实体类中使用<code>@TableLogin</code>注解标注逻辑删除字段</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.annotation.TableLogic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="comment">// 其他字段...</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@TableLogic</span></span><br><span class="line">    <span class="keyword">private</span> Integer deleted;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="枚举映射"><a href="#枚举映射" class="headerlink" title="枚举映射"></a>枚举映射</h2><p>MP 在 mybatis 的 <code>EnumOrdinalTypeHandler(基于枚举常量序号)</code> 和 <code>EnumTypeHandler(基于枚举常量名)</code> 之外，提供了更加灵活的枚举处理器 <code>MybatisEnumTypeHandler(基于枚举常量属性)</code>，只需要对枚举进行声明，即可实现枚举的自动映射，未进行声明的枚举则根据 <code>mybatis</code>的<code>defaultEnumTypeHandler</code> 的默认值<code>EnumTypeHandler</code> 来进行映射，详情请参考<a target="_blank" rel="noopener" href="https://baomidou.com/guides/auto-convert-enum/">自动映射枚举 | MyBatis-Plus</a></p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><ol>
+<li><p>方式一：注解标记</p>
+<p>枚举属性使用 <code>@EnumValue</code> 注解，指定枚举值在数据库中存储的实际值。支持枚举类中的任意字段，如序号或编码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">GradeEnum</span> &#123;</span><br><span class="line">    PRIMARY(<span class="number">1</span>, <span class="string">&quot;小学&quot;</span>),</span><br><span class="line">    SECONDARY(<span class="number">2</span>, <span class="string">&quot;中学&quot;</span>),</span><br><span class="line">    HIGH(<span class="number">3</span>, <span class="string">&quot;高中&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@EnumValue</span> <span class="comment">// 标记数据库存的值是code</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> code;</span><br><span class="line">    <span class="comment">// 其他属性...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>方式二：实现接口</p>
+<p>实现 <code>IEnum</code> 接口，实现 <code>getValue</code> 方法，指定枚举值在数据库中存储的实际值。支持枚举类中的任意字段，如序号或编码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">AgeEnum</span> <span class="keyword">implements</span> <span class="title class_">IEnum</span>&lt;Integer&gt; &#123;</span><br><span class="line">    ONE(<span class="number">1</span>, <span class="string">&quot;一岁&quot;</span>),</span><br><span class="line">    TWO(<span class="number">2</span>, <span class="string">&quot;二岁&quot;</span>),</span><br><span class="line">    THREE(<span class="number">3</span>, <span class="string">&quot;三岁&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> value;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String desc;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Integer <span class="title function_">getValue</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.value;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://maqiangfei.github.io/2024/09/28/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-MyBatis-Plus-%E9%AB%98%E7%BA%A7/" data-id="cm1m86n8g000ao5fybvk1epu7" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MyBatis-Plus/" rel="tag">MyBatis-Plus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ORM/" rel="tag">ORM</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/09/26/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%BE%AE%E6%9C%8D%E5%8A%A1-%E5%85%A5%E9%97%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">学习笔记 - 微服务 入门</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E5%88%A0%E9%99%A4"><span class="toc-number">1.</span> <span class="toc-text">逻辑删除</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">工作原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%AF%E6%8C%81%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.</span> <span class="toc-text">支持的数据类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">使用方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BE%E6%98%A0%E5%B0%84"><span class="toc-number">2.</span> <span class="toc-text">枚举映射</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">2.1.</span> <span class="toc-text">使用</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2024 maqiangfei&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;qiangfei.ma@qq.com
+    </div>
+  </div>
+</footer>
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ 
+<script src="/js/is.js"></script>
+
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/elevator.js"></script>
+
+  </div>
+</body>
+</html>
