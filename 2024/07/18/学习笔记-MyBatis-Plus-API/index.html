@@ -17,7 +17,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/28-16-19-55-D416B91F212FAB85FB5A07487E21077F.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/28-16-20-22-9275658DCFFBB2610CD7DDF4645D2C84.png">
 <meta property="article:published_time" content="2024-07-18T07:08:44.000Z">
-<meta property="article:modified_time" content="2024-09-29T05:44:21.862Z">
+<meta property="article:modified_time" content="2024-09-30T01:22:09.316Z">
 <meta property="article:author" content="maqiangfei">
 <meta property="article:tag" content="ORM">
 <meta property="article:tag" content="MyBatis-Plus">
@@ -110,8 +110,7 @@
 
 <h2 id="Wrapper"><a href="#Wrapper" class="headerlink" title="Wrapper"></a>Wrapper</h2><p>条件解析器</p>
 <h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/09/28-14-58-04-9D39DFB014ECCE3411EC3A8F3822562E.png"></p>
-<h3 id="API"><a href="#API" class="headerlink" title="API"></a>API</h3><ul>
-<li><p><code>getCustomSqlSegment(): String</code> 返回拼接的条件语句，可以将<code>wrapper</code>作为方法参数并添加注解<code>@Param(&quot;Constants.WRAPPER&quot;)，在xml映射文件中可以使用</code>${ew.customSqlSegment}<code>获取条件语句。</code>(<code>Constants.WRAPPER</code>的值为<code>ew</code>)</p>
+<h3 id="API"><a href="#API" class="headerlink" title="API"></a>API</h3><p><code>getCustomSqlSegment(): String</code> 返回拼接的条件语句，可以将<code>wrapper</code>作为方法参数并添加注解@Param(“Constants.WRAPPER”)，在xml映射文件中可以使用<code>$&#123;ew.customSqlSegment&#125;</code>获取条件语句。(<code>Constants.WRAPPER</code>的值为<code>ew</code>)</p>
 <p><code>UserMapper</code></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserMapper</span> <span class="keyword">extends</span> <span class="title class_">BaseMapper</span>&lt;User&gt; &#123;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">updateBalanceByIds</span><span class="params">(</span></span><br><span class="line"><span class="params">            <span class="meta">@Param(&quot;ew&quot;)</span> LambdaQueryWrapper&lt;User&gt; wrapper,</span></span><br><span class="line"><span class="params">            <span class="meta">@Param(&quot;money&quot;)</span> <span class="type">int</span> money)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -120,32 +119,54 @@
 
 <p><code>UserMapper.xml</code></p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.maffy.mapper.UserMapper&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">update</span> <span class="attr">id</span>=<span class="string">&quot;updateBalanceByIds&quot;</span>&gt;</span></span><br><span class="line">        update tb_user set balance = balance - #&#123;money&#125; $&#123;ew.customSqlSegment&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">update</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>eq(boolean, R, Object): Children</code></p>
-</li>
-<li><p><code>ne(boolean, R, Object): Children</code></p>
-</li>
-<li><p><code>lt(boolean, R, Object): Children</code></p>
-</li>
-<li><p><code>le(boolean, R, Object): Children</code></p>
-</li>
-<li><p><code>gt(boolean, R, Object): Children</code></p>
-</li>
-<li><p><code>ge(boolean, R, Object): Children</code></p>
-</li>
-<li><p><code>like(boolean, R, Object): Children</code></p>
-</li>
-<li><p><code>notLike(boolean, R, Object): Children</code></p>
-</li>
-<li><p><code>likeLeft(boolean, R, Object): Children</code></p>
-</li>
-<li><p><code>likeRight(boolean, R, Object): Children</code></p>
-</li>
-<li><p><code>between(boolean, R, Object): Children</code></p>
-</li>
-<li><p>…</p>
-</li>
-</ul>
+
+<div class="overflow">
+
+<table>
+<thead>
+<tr>
+<th>常用方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>eq(boolean, R, Object): Children</code></td>
+</tr>
+<tr>
+<td><code>ne(boolean, R, Object): Children</code></td>
+</tr>
+<tr>
+<td><code>lt(boolean, R, Object): Children</code></td>
+</tr>
+<tr>
+<td><code>le(boolean, R, Object): Children</code></td>
+</tr>
+<tr>
+<td><code>gt(boolean, R, Object): Children</code></td>
+</tr>
+<tr>
+<td><code>ge(boolean, R, Object): Children</code></td>
+</tr>
+<tr>
+<td><code>like(boolean, R, Object): Children</code></td>
+</tr>
+<tr>
+<td><code>notLike(boolean, R, Object): Children</code></td>
+</tr>
+<tr>
+<td><code>likeLeft(boolean, R, Object): Children</code></td>
+</tr>
+<tr>
+<td><code>likeRight(boolean, R, Object): Children</code></td>
+</tr>
+<tr>
+<td><code>between(boolean, R, Object): Children</code></td>
+</tr>
+<tr>
+<td>……</td>
+</tr>
+</tbody></table>
+</div>
+
 <p>其中<code>boolean</code>为是否拼接的条件，<code>R</code>是哪个字段，<code>Object</code>是参数，返回值<code>Children</code>是当前类型，从而实现链式编程</p>
 <p><code>WrapperTest</code></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WrapperTest</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * select | like | ge</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testQueryWrapper</span><span class="params">()</span> &#123;</span><br><span class="line">        Wrapper&lt;User&gt; wrapper = <span class="keyword">new</span> <span class="title class_">QueryWrapper</span>&lt;User&gt;()</span><br><span class="line">                .select(<span class="string">&quot;id&quot;</span>, <span class="string">&quot;username&quot;</span>, <span class="string">&quot;info&quot;</span>, <span class="string">&quot;balance&quot;</span>)</span><br><span class="line">                .like(<span class="string">&quot;username&quot;</span>, <span class="string">&quot;o&quot;</span>)</span><br><span class="line">                .ge(<span class="string">&quot;balance&quot;</span>, <span class="number">2000</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">sqlSelect</span> <span class="operator">=</span> wrapper.getSqlSelect();</span><br><span class="line">        System.out.println(sqlSelect); <span class="comment">// id,username,info,balance</span></span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">customSqlSegment</span> <span class="operator">=</span> wrapper.getCustomSqlSegment();</span><br><span class="line">        System.out.println(customSqlSegment);</span><br><span class="line">        <span class="comment">// WHERE (username LIKE #&#123;ew.paramNameValuePairs.MPGENVAL1&#125; AND balance &gt;= #&#123;ew.paramNameValuePairs.MPGENVAL2&#125;)</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * eq</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testUpdateByQueryWrapper</span><span class="params">()</span> &#123;</span><br><span class="line">        QueryWrapper&lt;User&gt; wrapper = <span class="keyword">new</span> <span class="title class_">QueryWrapper</span>&lt;User&gt;()</span><br><span class="line">                .eq(<span class="string">&quot;username&quot;</span>, <span class="string">&quot;jack&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">customSqlSegment</span> <span class="operator">=</span> wrapper.getCustomSqlSegment();</span><br><span class="line">        System.out.println(customSqlSegment); <span class="comment">// WHERE (username = #&#123;ew.paramNameValuePairs.MPGENVAL1&#125;)</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * setSql | in</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testUpdateByUpdateWrapper</span><span class="params">()</span> &#123;</span><br><span class="line">        List&lt;Long&gt; ids = List.of(<span class="number">1L</span>, <span class="number">2L</span>, <span class="number">4L</span>);</span><br><span class="line">        UpdateWrapper&lt;User&gt; wrapper = <span class="keyword">new</span> <span class="title class_">UpdateWrapper</span>&lt;User&gt;()</span><br><span class="line">                .setSql(<span class="string">&quot;balance = balance + 200&quot;</span>)</span><br><span class="line">                .in(<span class="string">&quot;id&quot;</span>, ids);</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">customSqlSegment</span> <span class="operator">=</span> wrapper.getCustomSqlSegment();</span><br><span class="line">        System.out.println(customSqlSegment);</span><br><span class="line">        <span class="comment">// WHERE (id IN (#&#123;ew.paramNameValuePairs.MPGENVAL1&#125;,#&#123;ew.paramNameValuePairs.MPGENVAL2&#125;,#&#123;ew.paramNameValuePairs.MPGENVAL3&#125;))</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 使用Lambda方式指定查询字段</span></span><br><span class="line"><span class="comment">     * select | like | ge</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testLambdaQueryWrapper</span><span class="params">()</span> &#123;</span><br><span class="line">        Wrapper&lt;User&gt; wrapper = <span class="keyword">new</span> <span class="title class_">LambdaQueryWrapper</span>&lt;User&gt;()</span><br><span class="line">                .select(User::getId, User::getUsername, User::getInfo, User::getBalance)</span><br><span class="line">                .like(User::getUsername, <span class="string">&quot;o&quot;</span>)</span><br><span class="line">                .ge(User::getBalance, <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">sqlSelect</span> <span class="operator">=</span> wrapper.getSqlSelect();</span><br><span class="line">        System.out.println(sqlSelect); <span class="comment">// id,username,info,balance</span></span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">customSqlSegment</span> <span class="operator">=</span> wrapper.getCustomSqlSegment();</span><br><span class="line">        System.out.println(customSqlSegment);</span><br><span class="line">        <span class="comment">// WHERE (username LIKE #&#123;ew.paramNameValuePairs.MPGENVAL1&#125; AND balance &gt;= #&#123;ew.paramNameValuePairs.MPGENVAL2&#125;)</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
