@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>命令行工具 oh-my-zsh | maqiangfei</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文记录命令行工具oh-my-zsh的安装和使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="命令行工具 oh-my-zsh">
+<meta property="og:url" content="https://maqiangfei.github.io/2024/10/04/%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7-oh-my-zsh/index.html">
+<meta property="og:site_name" content="maqiangfei">
+<meta property="og:description" content="本文记录命令行工具oh-my-zsh的安装和使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/04-22-50-23-QQ_1728053416239.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/05-11-33-47-QQ_1728099221648.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/05-11-58-21-QQ_1728100699234.png">
+<meta property="article:published_time" content="2024-10-04T13:58:26.000Z">
+<meta property="article:modified_time" content="2024-10-05T03:58:27.639Z">
+<meta property="article:author" content="maqiangfei">
+<meta property="article:tag" content="terminal">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/04-22-50-23-QQ_1728053416239.png">
+  
+    <link rel="alternate" href="/" title="maqiangfei" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://maqiangfei.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">maqiangfei</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-命令行工具-oh-my-zsh" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2024/10/04/%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7-oh-my-zsh/" class="article-date">
+  <time datetime="2024-10-04T13:58:26.000Z" itemprop="datePublished">2024-10-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%9D%82%E7%89%A9%E9%97%B4/">杂物间</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      命令行工具 oh-my-zsh
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <blockquote>
+<p>本文记录命令行工具<code>oh-my-zsh</code>的安装和使用</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="CentOS-7"><a href="#CentOS-7" class="headerlink" title="CentOS 7"></a>CentOS 7</h2><h3 id="全局用户安装"><a href="#全局用户安装" class="headerlink" title="全局用户安装"></a>全局用户安装</h3><ol>
+<li><p>查看是否安装<code>zsh</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/shells</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装<code>zsh</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> yum install -y zsh</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>切换<code>shell</code>为<code>zsh</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 给要安装的用户的shell切换为zsh</span></span><br><span class="line">chsh -s /bin/zsh</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>没有<code>git</code>先安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> yum install -y git</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装<code>oh-my-zsh</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载</span></span><br><span class="line"><span class="built_in">sudo</span> git <span class="built_in">clone</span> https://gitee.com/mirrors/oh-my-zsh.git /usr/local/oh-my-zsh</span><br><span class="line"><span class="comment"># 复制配置文件到/etc/skel</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> /usr/local/oh-my-zsh/templates/zshrc.zsh-template /etc/skel/.zshrc</span><br><span class="line"><span class="comment"># 修改安装目录</span></span><br><span class="line"><span class="built_in">sudo</span> sed -i <span class="string">&#x27;s|$HOME/.oh-my-zsh|/usr/local/oh-my-zsh|g&#x27;</span> /etc/skel/.zshrc</span><br><span class="line"><span class="comment"># 为每个用户配置独立的 cache 目录</span></span><br><span class="line"><span class="built_in">sudo</span> vim /etc/skel/.zshrc</span><br></pre></td></tr></table></figure>
+
+<p>在<code>export ZSH=/etc/oh-my-zsh</code>行下添加：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export ZSH_CACHE_DIR=<span class="string">&quot;$&#123;XDG_CACHE_HOME:-$HOME/.cache&#125;/oh-my-zsh&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看、更改主题</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看主题</span></span><br><span class="line"><span class="built_in">ls</span> /usr/local/oh-my-zsh/themes</span><br><span class="line"><span class="comment"># 修改主题</span></span><br><span class="line"><span class="built_in">sudo</span> vim /etc/skel/.zshrc</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/04-22-50-23-QQ_1728053416239.png"></p>
+</li>
+<li><p>应用配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 给要使用oh-my-zsh的用户软链接一份./zshrc</span></span><br><span class="line"><span class="built_in">ln</span> -s /etc/skel/.zshrc ~/.zshrc</span><br><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="安装语法高亮插件"><a href="#安装语法高亮插件" class="headerlink" title="安装语法高亮插件"></a>安装语法高亮插件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载插件zsh-syntax-highlighting</span></span><br><span class="line"><span class="built_in">sudo</span> git <span class="built_in">clone</span> --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git /usr/oh-my-zsh/custom/plugins/zsh-syntax-highlighting</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置使用插件</span></span><br><span class="line"><span class="built_in">sudo</span> vim /etc/skel/.zshrc</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/05-11-33-47-QQ_1728099221648.png"></p>
+<h3 id="安装建议补全插件"><a href="#安装建议补全插件" class="headerlink" title="安装建议补全插件"></a>安装建议补全插件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载插件</span></span><br><span class="line"><span class="built_in">sudo</span> git <span class="built_in">clone</span> --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git /usr/local/oh-my-zsh/custom/plugins/zsh-autosuggestions</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/05-11-58-21-QQ_1728100699234.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://maqiangfei.github.io/2024/10/04/%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7-oh-my-zsh/" data-id="cm1vp06yx00000bfy041ocf2y" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/terminal/" rel="tag">terminal</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/10/04/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Linux-%E5%AE%89%E8%A3%85Redis/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">开发手册 - Linux 安装Redis</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  </section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CentOS-7"><span class="toc-number">1.</span> <span class="toc-text">CentOS 7</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E7%94%A8%E6%88%B7%E5%AE%89%E8%A3%85"><span class="toc-number">1.1.</span> <span class="toc-text">全局用户安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E8%AF%AD%E6%B3%95%E9%AB%98%E4%BA%AE%E6%8F%92%E4%BB%B6"><span class="toc-number">1.2.</span> <span class="toc-text">安装语法高亮插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%BB%BA%E8%AE%AE%E8%A1%A5%E5%85%A8%E6%8F%92%E4%BB%B6"><span class="toc-number">1.3.</span> <span class="toc-text">安装建议补全插件</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2024 maqiangfei&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;qiangfei.ma@qq.com
+    </div>
+  </div>
+</footer>
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ 
+<script src="/js/is.js"></script>
+
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/elevator.js"></script>
+
+  </div>
+</body>
+</html>

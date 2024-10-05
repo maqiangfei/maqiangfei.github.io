@@ -146,4 +146,26 @@
 
     $container.removeClass('mobile-nav-on');
   });
+
+  // $('p > a > img').each(function(index, img){
+  //   console.log(img)
+  //   img.parentElement.parentElement.setAttribute('class','overflow')
+  // })
+
+  // $('div > a > img').each(function(index, img){
+  //   var a = img.parentElement
+  //   var div = document.createElement('div')
+  //   a.parentElement.replaceChild(div, a)
+  //   div.appendChild(a)
+  //   div.setAttribute('class', 'overflow')
+  // })
+
+  // $('table').each(function(index, table){
+  //   var parent = table.parentElement
+  //   var div = document.createElement('div')
+  //   parent.replaceChild(div, table)
+  //   div.appendChild(table)
+  //   div.setAttribute('class', 'overflow')
+  // })
+
 })(jQuery);
