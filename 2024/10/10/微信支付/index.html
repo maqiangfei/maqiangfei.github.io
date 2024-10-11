@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>微信支付 | maqiangfei</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文简单记录微信支付的API使用及工具类的封装">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信支付">
+<meta property="og:url" content="https://maqiangfei.github.io/2024/10/10/%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98/index.html">
+<meta property="og:site_name" content="maqiangfei">
+<meta property="og:description" content="本文简单记录微信支付的API使用及工具类的封装">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pay.wechatpay.cn/wiki/doc/apiv3/assets/img/pay/wechatpay/6_2.png">
+<meta property="article:published_time" content="2024-10-10T01:14:02.000Z">
+<meta property="article:modified_time" content="2024-10-10T08:24:47.319Z">
+<meta property="article:author" content="maqiangfei">
+<meta property="article:tag" content="微信">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pay.wechatpay.cn/wiki/doc/apiv3/assets/img/pay/wechatpay/6_2.png">
+  
+    <link rel="alternate" href="/" title="maqiangfei" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://maqiangfei.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">maqiangfei</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-微信支付" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2024/10/10/%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98/" class="article-date">
+  <time datetime="2024-10-10T01:14:02.000Z" itemprop="datePublished">2024-10-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C/">开发手册</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      微信支付
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <blockquote>
+<p>本文简单记录微信支付的API使用及工具类的封装</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="小程序支付"><a href="#小程序支付" class="headerlink" title="小程序支付"></a>小程序支付</h2><h3 id="支付时序图"><a href="#支付时序图" class="headerlink" title="支付时序图"></a>支付时序图</h3><p><img src="https://pay.wechatpay.cn/wiki/doc/apiv3/assets/img/pay/wechatpay/6_2.png" alt="示意图"></p>
+<h3 id="工具类封装"><a href="#工具类封装" class="headerlink" title="工具类封装"></a>工具类封装</h3><p><code>WeChatPayUtil</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WeChatPayUtil</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//微信支付下单接口地址</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">JSAPI</span> <span class="operator">=</span> <span class="string">&quot;https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//申请退款接口地址</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">REFUNDS</span> <span class="operator">=</span> <span class="string">&quot;https://api.mch.weixin.qq.com/v3/refund/domestic/refunds&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> WeChatProperties weChatProperties;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取调用微信接口的客户端工具对象</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> CloseableHttpClient <span class="title function_">getClient</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">PrivateKey</span> <span class="variable">merchantPrivateKey</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//merchantPrivateKey商户API私钥，如何加载商户API私钥请看常见问题</span></span><br><span class="line">            merchantPrivateKey = PemUtil.loadPrivateKey(<span class="keyword">new</span> <span class="title class_">FileInputStream</span>(<span class="keyword">new</span> <span class="title class_">File</span>(weChatProperties.getPrivateKeyFilePath())));</span><br><span class="line">            <span class="comment">//加载平台证书文件</span></span><br><span class="line">            <span class="type">X509Certificate</span> <span class="variable">x509Certificate</span> <span class="operator">=</span> PemUtil.loadCertificate(<span class="keyword">new</span> <span class="title class_">FileInputStream</span>(<span class="keyword">new</span> <span class="title class_">File</span>(weChatProperties.getWeChatPayCertFilePath())));</span><br><span class="line">            <span class="comment">//wechatPayCertificates微信支付平台证书列表。你也可以使用后面章节提到的“定时更新平台证书功能”，而不需要关心平台证书的来龙去脉</span></span><br><span class="line">            List&lt;X509Certificate&gt; wechatPayCertificates = Arrays.asList(x509Certificate);</span><br><span class="line"></span><br><span class="line">            <span class="type">WechatPayHttpClientBuilder</span> <span class="variable">builder</span> <span class="operator">=</span> WechatPayHttpClientBuilder.create()</span><br><span class="line">                    .withMerchant(weChatProperties.getMchid(), weChatProperties.getMchSerialNo(), merchantPrivateKey)</span><br><span class="line">                    .withWechatPay(wechatPayCertificates);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 通过WechatPayHttpClientBuilder构造的HttpClient，会自动的处理签名和验签</span></span><br><span class="line">            <span class="type">CloseableHttpClient</span> <span class="variable">httpClient</span> <span class="operator">=</span> builder.build();</span><br><span class="line">            <span class="keyword">return</span> httpClient;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送post方式请求</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> url</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> body</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">post</span><span class="params">(String url, String body)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">CloseableHttpClient</span> <span class="variable">httpClient</span> <span class="operator">=</span> getClient();</span><br><span class="line"></span><br><span class="line">        <span class="type">HttpPost</span> <span class="variable">httpPost</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HttpPost</span>(url);</span><br><span class="line">        httpPost.addHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.toString());</span><br><span class="line">        httpPost.addHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString());</span><br><span class="line">        httpPost.addHeader(<span class="string">&quot;Wechatpay-Serial&quot;</span>, weChatProperties.getMchSerialNo());</span><br><span class="line">        httpPost.setEntity(<span class="keyword">new</span> <span class="title class_">StringEntity</span>(body, <span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line"></span><br><span class="line">        <span class="type">CloseableHttpResponse</span> <span class="variable">response</span> <span class="operator">=</span> httpClient.execute(httpPost);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">bodyAsString</span> <span class="operator">=</span> EntityUtils.toString(response.getEntity());</span><br><span class="line">            <span class="keyword">return</span> bodyAsString;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            httpClient.close();</span><br><span class="line">            response.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送get方式请求</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> url</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">get</span><span class="params">(String url)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">CloseableHttpClient</span> <span class="variable">httpClient</span> <span class="operator">=</span> getClient();</span><br><span class="line"></span><br><span class="line">        <span class="type">HttpGet</span> <span class="variable">httpGet</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HttpGet</span>(url);</span><br><span class="line">        httpGet.addHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.toString());</span><br><span class="line">        httpGet.addHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString());</span><br><span class="line">        httpGet.addHeader(<span class="string">&quot;Wechatpay-Serial&quot;</span>, weChatProperties.getMchSerialNo());</span><br><span class="line"></span><br><span class="line">        <span class="type">CloseableHttpResponse</span> <span class="variable">response</span> <span class="operator">=</span> httpClient.execute(httpGet);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">bodyAsString</span> <span class="operator">=</span> EntityUtils.toString(response.getEntity());</span><br><span class="line">            <span class="keyword">return</span> bodyAsString;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            httpClient.close();</span><br><span class="line">            response.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * jsapi下单</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> orderNum    商户订单号</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> total       总金额</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> description 商品描述</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> openid      微信用户的openid</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">jsapi</span><span class="params">(String orderNum, BigDecimal total, String description, String openid)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">JSONObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONObject</span>();</span><br><span class="line">        jsonObject.put(<span class="string">&quot;appid&quot;</span>, weChatProperties.getAppid());</span><br><span class="line">        jsonObject.put(<span class="string">&quot;mchid&quot;</span>, weChatProperties.getMchid());</span><br><span class="line">        jsonObject.put(<span class="string">&quot;description&quot;</span>, description);</span><br><span class="line">        jsonObject.put(<span class="string">&quot;out_trade_no&quot;</span>, orderNum);</span><br><span class="line">        jsonObject.put(<span class="string">&quot;notify_url&quot;</span>, weChatProperties.getNotifyUrl());</span><br><span class="line"></span><br><span class="line">        <span class="type">JSONObject</span> <span class="variable">amount</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONObject</span>();</span><br><span class="line">        amount.put(<span class="string">&quot;total&quot;</span>, total.multiply(<span class="keyword">new</span> <span class="title class_">BigDecimal</span>(<span class="number">100</span>)).setScale(<span class="number">2</span>, BigDecimal.ROUND_HALF_UP).intValue());</span><br><span class="line">        amount.put(<span class="string">&quot;currency&quot;</span>, <span class="string">&quot;CNY&quot;</span>);</span><br><span class="line"></span><br><span class="line">        jsonObject.put(<span class="string">&quot;amount&quot;</span>, amount);</span><br><span class="line"></span><br><span class="line">        <span class="type">JSONObject</span> <span class="variable">payer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONObject</span>();</span><br><span class="line">        payer.put(<span class="string">&quot;openid&quot;</span>, openid);</span><br><span class="line"></span><br><span class="line">        jsonObject.put(<span class="string">&quot;payer&quot;</span>, payer);</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">body</span> <span class="operator">=</span> jsonObject.toJSONString();</span><br><span class="line">        <span class="keyword">return</span> post(JSAPI, body);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 小程序支付</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> orderNum    商户订单号</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> total       金额，单位 元</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> description 商品描述</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> openid      微信用户的openid</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> JSONObject <span class="title function_">pay</span><span class="params">(String orderNum, BigDecimal total, String description, String openid)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">//统一下单，生成预支付交易单</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">bodyAsString</span> <span class="operator">=</span> jsapi(orderNum, total, description, openid);</span><br><span class="line">        <span class="comment">//解析返回结果</span></span><br><span class="line">        <span class="type">JSONObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> JSON.parseObject(bodyAsString);</span><br><span class="line">        System.out.println(jsonObject);</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">prepayId</span> <span class="operator">=</span> jsonObject.getString(<span class="string">&quot;prepay_id&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (prepayId != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">timeStamp</span> <span class="operator">=</span> String.valueOf(System.currentTimeMillis() / <span class="number">1000</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">nonceStr</span> <span class="operator">=</span> RandomStringUtils.randomNumeric(<span class="number">32</span>);</span><br><span class="line">            ArrayList&lt;Object&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">            list.add(weChatProperties.getAppid());</span><br><span class="line">            list.add(timeStamp);</span><br><span class="line">            list.add(nonceStr);</span><br><span class="line">            list.add(<span class="string">&quot;prepay_id=&quot;</span> + prepayId);</span><br><span class="line">            <span class="comment">//二次签名，调起支付需要重新签名</span></span><br><span class="line">            <span class="type">StringBuilder</span> <span class="variable">stringBuilder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">            <span class="keyword">for</span> (Object o : list) &#123;</span><br><span class="line">                stringBuilder.append(o).append(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="type">String</span> <span class="variable">signMessage</span> <span class="operator">=</span> stringBuilder.toString();</span><br><span class="line">            <span class="type">byte</span>[] message = signMessage.getBytes();</span><br><span class="line"></span><br><span class="line">            <span class="type">Signature</span> <span class="variable">signature</span> <span class="operator">=</span> Signature.getInstance(<span class="string">&quot;SHA256withRSA&quot;</span>);</span><br><span class="line">            signature.initSign(PemUtil.loadPrivateKey(<span class="keyword">new</span> <span class="title class_">FileInputStream</span>(<span class="keyword">new</span> <span class="title class_">File</span>(weChatProperties.getPrivateKeyFilePath()))));</span><br><span class="line">            signature.update(message);</span><br><span class="line">            <span class="type">String</span> <span class="variable">packageSign</span> <span class="operator">=</span> Base64.getEncoder().encodeToString(signature.sign());</span><br><span class="line"></span><br><span class="line">            <span class="comment">//构造数据给微信小程序，用于调起微信支付</span></span><br><span class="line">            <span class="type">JSONObject</span> <span class="variable">jo</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONObject</span>();</span><br><span class="line">            jo.put(<span class="string">&quot;timeStamp&quot;</span>, timeStamp);</span><br><span class="line">            jo.put(<span class="string">&quot;nonceStr&quot;</span>, nonceStr);</span><br><span class="line">            jo.put(<span class="string">&quot;package&quot;</span>, <span class="string">&quot;prepay_id=&quot;</span> + prepayId);</span><br><span class="line">            jo.put(<span class="string">&quot;signType&quot;</span>, <span class="string">&quot;RSA&quot;</span>);</span><br><span class="line">            jo.put(<span class="string">&quot;paySign&quot;</span>, packageSign);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> jo;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> jsonObject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 申请退款</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> outTradeNo    商户订单号</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> outRefundNo   商户退款单号</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> refund        退款金额</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> total         原订单金额</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">refund</span><span class="params">(String outTradeNo, String outRefundNo, BigDecimal refund, BigDecimal total)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">JSONObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONObject</span>();</span><br><span class="line">        jsonObject.put(<span class="string">&quot;out_trade_no&quot;</span>, outTradeNo);</span><br><span class="line">        jsonObject.put(<span class="string">&quot;out_refund_no&quot;</span>, outRefundNo);</span><br><span class="line"></span><br><span class="line">        <span class="type">JSONObject</span> <span class="variable">amount</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONObject</span>();</span><br><span class="line">        amount.put(<span class="string">&quot;refund&quot;</span>, refund.multiply(<span class="keyword">new</span> <span class="title class_">BigDecimal</span>(<span class="number">100</span>)).setScale(<span class="number">2</span>, BigDecimal.ROUND_HALF_UP).intValue());</span><br><span class="line">        amount.put(<span class="string">&quot;total&quot;</span>, total.multiply(<span class="keyword">new</span> <span class="title class_">BigDecimal</span>(<span class="number">100</span>)).setScale(<span class="number">2</span>, BigDecimal.ROUND_HALF_UP).intValue());</span><br><span class="line">        amount.put(<span class="string">&quot;currency&quot;</span>, <span class="string">&quot;CNY&quot;</span>);</span><br><span class="line"></span><br><span class="line">        jsonObject.put(<span class="string">&quot;amount&quot;</span>, amount);</span><br><span class="line">        jsonObject.put(<span class="string">&quot;notify_url&quot;</span>, weChatProperties.getRefundNotifyUrl());</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">body</span> <span class="operator">=</span> jsonObject.toJSONString();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用申请退款接口</span></span><br><span class="line">        <span class="keyword">return</span> post(REFUNDS, body);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>前端将待支付的订单号传给后端；后端通过封装的工具类，带着商户号、订单号、回调地址等信息去请求微信支付服务后台生成预支付交易单，并将预支付信息返回给前端；前端带着预支付信息去请求微信支付服务后台完成支付；微信支付服务后台在支付成功后用回调地址通知后端更新订单信息</p>
+<p><strong>获取预支付信息给前端</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 订单支付</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> ordersPaymentDTO 前端提交的订单号，及支付方式</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> OrderPaymentVO <span class="title function_">payment</span><span class="params">(OrdersPaymentDTO ordersPaymentDTO)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> userMapper.getById(BaseContext.getCurrentId());</span><br><span class="line">    <span class="comment">// 对应步骤4，调用微信支付接口，生成预支付交易单</span></span><br><span class="line">    <span class="type">JSONObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> weChatPayUtil.pay(</span><br><span class="line">            ordersPaymentDTO.getOrderNumber(),</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">BigDecimal</span>(<span class="string">&quot;0.01&quot;</span>),</span><br><span class="line">            <span class="string">&quot;快了么外卖订单&quot;</span>,</span><br><span class="line">            user.getOpenid()</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">if</span> (jsonObject.getString(<span class="string">&quot;code&quot;</span>) != <span class="literal">null</span> &amp;&amp; jsonObject.getString(<span class="string">&quot;code&quot;</span>).equals(<span class="string">&quot;ORDERPAID&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">OrderBusinessException</span>(MessageConstant.ORDER_PAID_ERROR);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 对应步骤5，返回预支付参数给前端</span></span><br><span class="line">    <span class="type">OrderPaymentVO</span> <span class="variable">vo</span> <span class="operator">=</span> jsonObject.toJavaObject(OrderPaymentVO.class);</span><br><span class="line">    vo.setPackageStr(jsonObject.getString(<span class="string">&quot;package&quot;</span>));</span><br><span class="line">    <span class="keyword">return</span> vo;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>处理支付回调</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/notify&quot;)</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PayNotifyController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> OrderService orderService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> WeChatProperties weChatProperties;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 支付成功回调</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> request</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/paySuccess&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">paySuccessNotify</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">//读取数据</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">body</span> <span class="operator">=</span> readData(request);</span><br><span class="line">        log.info(<span class="string">&quot;支付成功回调：&#123;&#125;&quot;</span>, body);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//数据解密</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">plainText</span> <span class="operator">=</span> decryptData(body);</span><br><span class="line">        log.info(<span class="string">&quot;解密后的文本：&#123;&#125;&quot;</span>, plainText);</span><br><span class="line"></span><br><span class="line">        <span class="type">JSONObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> JSON.parseObject(plainText);</span><br><span class="line">        <span class="type">String</span> <span class="variable">outTradeNo</span> <span class="operator">=</span> jsonObject.getString(<span class="string">&quot;out_trade_no&quot;</span>);<span class="comment">//商户平台订单号</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">transactionId</span> <span class="operator">=</span> jsonObject.getString(<span class="string">&quot;transaction_id&quot;</span>);<span class="comment">//微信支付交易号</span></span><br><span class="line"></span><br><span class="line">        log.info(<span class="string">&quot;商户平台订单号：&#123;&#125;&quot;</span>, outTradeNo);</span><br><span class="line">        log.info(<span class="string">&quot;微信支付交易号：&#123;&#125;&quot;</span>, transactionId);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//业务处理，修改订单状态、来单提醒</span></span><br><span class="line">        orderService.paySuccess(outTradeNo);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//给微信响应</span></span><br><span class="line">        responseToWeixin(response);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 读取数据</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">readData</span><span class="params">(HttpServletRequest request)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">BufferedReader</span> <span class="variable">reader</span> <span class="operator">=</span> request.getReader();</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">result</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="type">String</span> <span class="variable">line</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">while</span> ((line = reader.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (result.length() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                result.append(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            result.append(line);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result.toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数据解密</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> body</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">decryptData</span><span class="params">(String body)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">JSONObject</span> <span class="variable">resultObject</span> <span class="operator">=</span> JSON.parseObject(body);</span><br><span class="line">        <span class="type">JSONObject</span> <span class="variable">resource</span> <span class="operator">=</span> resultObject.getJSONObject(<span class="string">&quot;resource&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">ciphertext</span> <span class="operator">=</span> resource.getString(<span class="string">&quot;ciphertext&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">nonce</span> <span class="operator">=</span> resource.getString(<span class="string">&quot;nonce&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">associatedData</span> <span class="operator">=</span> resource.getString(<span class="string">&quot;associated_data&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">AesUtil</span> <span class="variable">aesUtil</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AesUtil</span>(weChatProperties.getApiV3Key().getBytes(StandardCharsets.UTF_8));</span><br><span class="line">        <span class="comment">//密文解密</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">plainText</span> <span class="operator">=</span> aesUtil.decryptToString(associatedData.getBytes(StandardCharsets.UTF_8),</span><br><span class="line">                nonce.getBytes(StandardCharsets.UTF_8),</span><br><span class="line">                ciphertext);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> plainText;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 给微信响应</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> response</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">responseToWeixin</span><span class="params">(HttpServletResponse response)</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        response.setStatus(<span class="number">200</span>);</span><br><span class="line">        HashMap&lt;Object, Object&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        map.put(<span class="string">&quot;code&quot;</span>, <span class="string">&quot;SUCCESS&quot;</span>);</span><br><span class="line">        map.put(<span class="string">&quot;message&quot;</span>, <span class="string">&quot;SUCCESS&quot;</span>);</span><br><span class="line">        response.setHeader(<span class="string">&quot;Content-type&quot;</span>, ContentType.APPLICATION_JSON.toString());</span><br><span class="line">        response.getOutputStream().write(JSONUtils.toJSONString(map).getBytes(StandardCharsets.UTF_8));</span><br><span class="line">        response.flushBuffer();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>更新订单</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 支付成功，修改订单状态</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> outTradeNo</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">paySuccess</span><span class="params">(String outTradeNo)</span> &#123;</span><br><span class="line">    <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> BaseContext.getCurrentId();</span><br><span class="line">    <span class="comment">// 根据订单号查询当前用户的订单</span></span><br><span class="line">    <span class="type">Long</span> <span class="variable">orderId</span> <span class="operator">=</span> orderMapper.getIdByNumberAndUserId(outTradeNo, userId);</span><br><span class="line">    <span class="comment">// 根据订单id更新订单的状态、支付方式、支付状态、结账时间</span></span><br><span class="line">    <span class="type">Orders</span> <span class="variable">orders</span> <span class="operator">=</span> Orders.builder()</span><br><span class="line">            .id(orderId)</span><br><span class="line">            .status(Orders.TO_BE_CONFIRMED)</span><br><span class="line">            .payStatus(Orders.PAID)</span><br><span class="line">            .checkoutTime(LocalDateTime.now())</span><br><span class="line">            .build();</span><br><span class="line">    orderMapper.update(orders);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://maqiangfei.github.io/2024/10/10/%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98/" data-id="cm24idvpg000k27fya4453e8h" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1/" rel="tag">微信</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/10/07/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-Spring-Cache-%E5%85%A5%E9%97%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">学习笔记 - Spring Cache 入门</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  </section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%94%AF%E4%BB%98"><span class="toc-number">1.</span> <span class="toc-text">小程序支付</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%AF%E4%BB%98%E6%97%B6%E5%BA%8F%E5%9B%BE"><span class="toc-number">1.1.</span> <span class="toc-text">支付时序图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E7%B1%BB%E5%B0%81%E8%A3%85"><span class="toc-number">1.2.</span> <span class="toc-text">工具类封装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">1.3.</span> <span class="toc-text">使用</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2024 maqiangfei&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;qiangfei.ma@qq.com
+    </div>
+  </div>
+</footer>
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ 
+<script src="/js/is.js"></script>
+
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/elevator.js"></script>
+
+  </div>
+</body>
+</html>

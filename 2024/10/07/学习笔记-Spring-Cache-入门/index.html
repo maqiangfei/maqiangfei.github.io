@@ -13,7 +13,7 @@
 <meta property="og:description" content="Spring Cache 是一个框架，实现了基于注解的缓存功能，只需要简单地加一个注解，就能实现缓存功能">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-10-07T14:07:03.000Z">
-<meta property="article:modified_time" content="2024-10-07T14:21:08.234Z">
+<meta property="article:modified_time" content="2024-10-08T11:18:47.617Z">
 <meta property="article:author" content="maqiangfei">
 <meta property="article:tag" content="Cache">
 <meta name="twitter:card" content="summary">
@@ -100,7 +100,7 @@
         <blockquote>
 <p>Spring Cache 是一个框架，实现了基于注解的缓存功能，只需要简单地加一个注解，就能实现缓存功能</p>
 </blockquote>
-<span id="more"></span> 
+<span id="more"></span>
 
 <h2 id="Spring-Cache"><a href="#Spring-Cache" class="headerlink" title="Spring Cache"></a>Spring Cache</h2><p><code>Spring Cache</code>提供了一层抽象，底层可以切换不同的缓存实现，例如：</p>
 <ul>
@@ -118,26 +118,49 @@
 <thead>
 <tr>
 <th>注解</th>
+<th>属性</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>@EnableCaching</code></td>
+<td></td>
 <td>开启缓存注解功能，通常加在启动类上</td>
 </tr>
 <tr>
 <td><code>@Cacheable</code></td>
+<td><code>cacheNames</code><br/><code>key</code></td>
 <td>在方法执行前先查询缓存中是否有数据，如果有数据，则直接返回缓存数据；如果没有缓存数据，调用方法并将方法返回值放到缓存中</td>
 </tr>
 <tr>
 <td><code>@CachePut</code></td>
+<td><code>cacheNames</code><br/><code>key</code></td>
 <td>将方法的返回值放到缓存中</td>
 </tr>
 <tr>
 <td><code>@CacheEvict</code></td>
+<td><code>cacheNames</code><br/><code>key</code></td>
 <td>将一条或多条数据从缓存中删除</td>
 </tr>
+<tr>
+<td><code>@Caching</code></td>
+<td><code>cacheable</code><br/><code>evict</code></td>
+<td>在一个方法上同时指定多个Spring Cache相关注解</td>
+</tr>
 </tbody></table>
+<h2 id="代码演示"><a href="#代码演示" class="headerlink" title="代码演示"></a>代码演示</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableCaching</span> <span class="comment">// 启动类开启缓存</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CacheDemoApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(CacheDemoApplication.class,args);</span><br><span class="line">        log.info(<span class="string">&quot;项目启动成功...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>@CachePut</code>将方法的返回值放到缓存中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping</span></span><br><span class="line"><span class="comment">// @CachePut(cacheNames = &quot;userCache&quot;, key = &quot;#user.id&quot;)  // user为参数名，key生成为 userCache::1</span></span><br><span class="line"><span class="comment">// @CachePut(cacheNames = &quot;userCache&quot;, key = &quot;#p0.id&quot;) // p0代表第一个参数</span></span><br><span class="line"><span class="comment">// @CachePut(cacheNames = &quot;userCache&quot;, key = &quot;#a0.id&quot;) // a0代表第一个参数</span></span><br><span class="line"><span class="meta">@CachePut(cacheNames = &quot;userCache&quot;, key = &quot;#result.id&quot;)</span>  <span class="comment">// result为方法返回对象</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">save</span><span class="params">(<span class="meta">@RequestBody</span> User user)</span>&#123;</span><br><span class="line">    userMapper.insert(user); <span class="comment">// 开启了id生成</span></span><br><span class="line">    <span class="keyword">return</span> user;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>@Cacheable</code>有则使用缓存，无则添加缓存</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span></span><br><span class="line"><span class="meta">@Cacheable(cacheNames = &quot;userCache&quot;, key = &quot;#id&quot;)</span> <span class="comment">// @Cacheable 不能使用 #result.</span></span><br><span class="line"><span class="keyword">public</span> User <span class="title function_">getById</span><span class="params">(Long id)</span>&#123;</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> userMapper.getById(id);</span><br><span class="line">    <span class="keyword">return</span> user;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>@CacheEvict</code>删除缓存</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@DeleteMapping</span></span><br><span class="line"><span class="meta">@CacheEvict(cacheNames = &quot;userCache&quot;, key = &quot;#id&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteById</span><span class="params">(Long id)</span>&#123;</span><br><span class="line">    userMapper.deleteById(id);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@DeleteMapping(&quot;/delAll&quot;)</span></span><br><span class="line"><span class="meta">@CacheEvict(cacheNames = &quot;userCache&quot;, allEntries = true)</span> <span class="comment">// 删除userCache下的所有缓存</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteAll</span><span class="params">()</span>&#123;</span><br><span class="line">    userMapper.deleteAll();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>@Caching</code>同时添加多个注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Caching(evict = &#123;</span></span><br><span class="line"><span class="meta">        @CacheEvict(cacheNames = &quot;setmeal:category&quot;, key = &quot;#result&quot;),</span></span><br><span class="line"><span class="meta">        @CacheEvict(cacheNames = &quot;setmeal:dishitem&quot;, key = &quot;#id&quot;)</span></span><br><span class="line"><span class="meta">&#125;)</span></span><br><span class="line"><span class="keyword">public</span> Long <span class="title function_">startOrStop</span><span class="params">(Integer status, Long id)</span> &#123;</span><br><span class="line">    <span class="type">Long</span> <span class="variable">categoryId</span> <span class="operator">=</span> setmealMapper.getCategoryId(id);</span><br><span class="line">    <span class="keyword">if</span> (status.equals(StatusConstant.ENABLE)) &#123;</span><br><span class="line">        <span class="comment">// 启用套餐先检查分类是否开启</span></span><br><span class="line">        <span class="type">Integer</span> <span class="variable">categoryStatus</span> <span class="operator">=</span> categoryMapper.getStatus(categoryId);</span><br><span class="line">        <span class="keyword">if</span> (categoryStatus != <span class="literal">null</span> &amp;&amp; categoryStatus.equals(StatusConstant.DISABLE)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">EnableNotAllowedException</span>(MessageConstant.SETMEAL_ENABLE_FAILED);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">Setmeal</span> <span class="variable">setmeal</span> <span class="operator">=</span> Setmeal.builder()</span><br><span class="line">            .status(status)</span><br><span class="line">            .id(id)</span><br><span class="line">            .build();</span><br><span class="line">    setmealMapper.update(setmeal);</span><br><span class="line">    <span class="keyword">return</span> categoryId;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -198,6 +221,15 @@
     
 <nav id="article-nav">
   
+    <a href="/2024/10/10/%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          微信支付
+        
+      </div>
+    </a>
+  
   
     <a href="/2024/10/06/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E5%85%A5%E9%97%A8/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
@@ -237,7 +269,7 @@
       
         <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-Cache"><span class="toc-number">1.</span> <span class="toc-text">Spring Cache</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96"><span class="toc-number">2.</span> <span class="toc-text">依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3"><span class="toc-number">3.</span> <span class="toc-text">常用注解</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-Cache"><span class="toc-number">1.</span> <span class="toc-text">Spring Cache</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96"><span class="toc-number">2.</span> <span class="toc-text">依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3"><span class="toc-number">3.</span> <span class="toc-text">常用注解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA"><span class="toc-number">4.</span> <span class="toc-text">代码演示</span></a></li></ol>
           </div>
       </div>
     </div>
