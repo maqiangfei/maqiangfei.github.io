@@ -3,17 +3,22 @@
 <head>
   <meta charset="utf-8">
   
-  <title>tags | maqiangfei</title>
+  <title>学习笔记 - Spring Task 入门 | maqiangfei</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="https://maqiangfei.github.io/tags/index.html">
+  <meta name="description" content="Spring Task 是 Spring 框架提供的任务调度工具，可以按照约定的时间自动执行某个代码逻辑">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习笔记 - Spring Task 入门">
+<meta property="og:url" content="https://maqiangfei.github.io/2024/10/11/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-Spring-Task-%E5%85%A5%E9%97%A8/index.html">
 <meta property="og:site_name" content="maqiangfei">
+<meta property="og:description" content="Spring Task 是 Spring 框架提供的任务调度工具，可以按照约定的时间自动执行某个代码逻辑">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-09-17T14:13:05.000Z">
-<meta property="article:modified_time" content="2024-09-17T14:13:17.035Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/11-17-49-56-QQ_1728640194178.png">
+<meta property="article:published_time" content="2024-10-11T09:34:33.000Z">
+<meta property="article:modified_time" content="2024-10-11T12:37:35.258Z">
 <meta property="article:author" content="maqiangfei">
+<meta property="article:tag" content="Spring">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/11-17-49-56-QQ_1728640194178.png">
   
     <link rel="alternate" href="/" title="maqiangfei" type="application/atom+xml">
   
@@ -66,12 +71,16 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="page-" class="article article-type-page" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-学习笔记-Spring-Task-入门" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/tags/index.html" class="article-date">
-  <time datetime="2024-09-17T14:13:05.000Z" itemprop="datePublished">2024-09-17</time>
+    <a href="/2024/10/11/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-Spring-Task-%E5%85%A5%E9%97%A8/" class="article-date">
+  <time datetime="2024-10-11T09:34:33.000Z" itemprop="datePublished">2024-10-11</time>
 </a>
     
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+  </div>
+
   </div>
   <div class="article-inner">
     
@@ -80,7 +89,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      tags
+      学习笔记 - Spring Task 入门
     </h1>
   
 
@@ -90,14 +99,48 @@
       
         <!-- Table of Contents -->
         
-        
+        <blockquote>
+<p>Spring Task 是 Spring 框架提供的任务调度工具，可以按照约定的时间自动执行某个代码逻辑</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ul>
+<li><p>信用卡每月还款提醒</p>
+</li>
+<li><p>银行贷款每月还款提醒</p>
+</li>
+<li><p>火车票系统处理未支付订单</p>
+</li>
+<li><p>入职纪念日未用户发送通知</p>
+</li>
+<li><p>…</p>
+</li>
+</ul>
+<h2 id="Cron表达式"><a href="#Cron表达式" class="headerlink" title="Cron表达式"></a>Cron表达式</h2><p>cron表达式其实就是一个字符串，通过cron表达式可以定义任务触发的时间</p>
+<p>构成规则：分为6或7个域，由空格分隔开，每个域代表一个含义</p>
+<p>每个域的含义分别为：秒、分钟、小时、日、月、周、年（可选）</p>
+<img title="" src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/11-17-49-56-QQ_1728640194178.png" alt="" width="571">
+
+<p>cron表达式生成网站：<a target="_blank" rel="noopener" href="https://cron.qqe2.com/">奇Q工具网</a></p>
+<h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><ol>
+<li><p>导入maven坐标 <code>spring-context</code> （已存在）</p>
+</li>
+<li><p>启动类上加 <code>@EnableScheduling</code> 注解，开启任务调度</p>
+</li>
+<li><p>自定义定时任务类</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyTask</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Scheduled(cron = &quot;0/5 * * * * ?&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">executeTask</span><span class="params">()</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;定时任务开始执行：&#123;&#125;&quot;</span>, <span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://maqiangfei.github.io/tags/index.html" data-id="cm1jff5o60002slfy5bvdbyf9" class="article-share-link">分享</a>
+      <a data-url="https://maqiangfei.github.io/2024/10/11/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-Spring-Task-%E5%85%A5%E9%97%A8/" data-id="cm24pr2oa00004ofyfvar52o9" class="article-share-link">分享</a>
       
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/" rel="tag">Spring</a></li></ul>
+
     </footer>
   </div>
   
@@ -146,6 +189,16 @@
   </div>
 
     
+<nav id="article-nav">
+  
+  
+    <a href="/2024/10/10/%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">微信支付</div>
+    </a>
+  
+</nav>
+
   
 </article>
  
@@ -169,15 +222,19 @@
 
   
     
-  <div class="widget-wrap">
-    <h3 class="widget-title tagcloud">标签云</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/Cache/" style="font-size: 18.4px;">Cache</a> <a href="/tags/FastDFS/" style="font-size: 16.2px;">FastDFS</a> <a href="/tags/HttpClient/" style="font-size: 14px;">HttpClient</a> <a href="/tags/IP/" style="font-size: 14px;">IP</a> <a href="/tags/JWT/" style="font-size: 14px;">JWT</a> <a href="/tags/Java/" style="font-size: 22.8px;">Java</a> <a href="/tags/Linux/" style="font-size: 25px;">Linux</a> <a href="/tags/MQ/" style="font-size: 18.4px;">MQ</a> <a href="/tags/MyBatis/" style="font-size: 20.6px;">MyBatis</a> <a href="/tags/MyBatis-Plus/" style="font-size: 18.4px;">MyBatis-Plus</a> <a href="/tags/MySQL/" style="font-size: 14px;">MySQL</a> <a href="/tags/ORM/" style="font-size: 25px;">ORM</a> <a href="/tags/RabbitMQ/" style="font-size: 18.4px;">RabbitMQ</a> <a href="/tags/Redis/" style="font-size: 18.4px;">Redis</a> <a href="/tags/SQL/" style="font-size: 14px;">SQL</a> <a href="/tags/Spring/" style="font-size: 16.2px;">Spring</a> <a href="/tags/Swagger/" style="font-size: 14px;">Swagger</a> <a href="/tags/Tomcat/" style="font-size: 14px;">Tomcat</a> <a href="/tags/terminal/" style="font-size: 14px;">terminal</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 16.2px;">分布式</a> <a href="/tags/%E5%AE%89%E8%A3%85/" style="font-size: 22.8px;">安装</a> <a href="/tags/%E5%BE%AE%E4%BF%A1/" style="font-size: 16.2px;">微信</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 14px;">微服务</a> <a href="/tags/%E9%A1%B9%E7%9B%AE/" style="font-size: 14px;">项目</a>
-    </div>
-  </div>
-
   
     
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">使用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cron%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">Cron表达式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">3.</span> <span class="toc-text">使用方式</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
   
     
 
