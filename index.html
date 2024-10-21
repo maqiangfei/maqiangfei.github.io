@@ -92,49 +92,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <!-- Table of Contents -->
-        
         <blockquote>
 <p>本文简单介绍分布式事务的解决方案</p>
 </blockquote>
-<h2 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h2><p>下单业务，前端请求首先进入订单服务，创建订单并写入数据库。然后订单服务调用购物车服务和库存服务：</p>
-<ul>
-<li><p>购物车服务负责清理购物车信息</p>
-</li>
-<li><p>库存服务负责扣减商品库存</p>
-</li>
-</ul>
-<img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/20-20-36-31-QQ_1729427786273.png" title="" alt="" width="638">
-
-<p>在分布式系统中，如果一个业务需要多个服务合作完成，而且每一个服务都有事务，多个事务必须同时成功或失败，这样的事务就是分布式事务。其中的每个服务的事务就是一个分支事务。整个业务称为全局事务</p>
-<p>分布式事务解决思路：</p>
-<p>解决分布式事务，各个子事务之间必须能感知到彼此的事务状态，才能保证状态一致。</p>
-<img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/20-20-49-59-QQ_1729428596701.png" title="" alt="" width="633">
-
-<h2 id="Seata"><a href="#Seata" class="headerlink" title="Seata"></a>Seata</h2><p>Seata是2019年1月份蚂蚁金服和阿里巴巴共同开源的分布式事务解决方案。致力于提高性能和简单易用的分布式事务服务，为用户打造一站式的分布式解决方案。官网地址：<a target="_blank" rel="noopener" href="http://seata.io/">http://seata.io</a>，其中的文档、播客中提供了大量的使用说明、源码分析。</p>
-<h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p>Seata事务管理中有三个重要的角色：</p>
-<ul>
-<li><p><strong>TC(Transaction Coordinator) - 事务协调者</strong>：维护全局和分支事务的状态，协调全局事务提交和回滚。</p>
-</li>
-<li><p><strong>TM(Transaction Manager) - 事务管理器</strong>：定义全局事务的范围、开始全局事务、提交或回滚全局事务。</p>
-</li>
-<li><p><strong>RM(Resource Manager) - 资源管理器</strong>：管理分支事务，与TC交谈以注册分支事务和报告分支事务的状态</p>
-</li>
-</ul>
-<img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/20-21-03-10-QQ_1729429386941.png" title="" alt="" width="628">
-
-<h3 id="部署TC服务"><a href="#部署TC服务" class="headerlink" title="部署TC服务"></a>部署TC服务</h3><p>在docker中部署，需要先准备好Seata的配置文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker run --name seata \</span><br><span class="line">-p 8099:8099 \</span><br><span class="line">-p 7099:7099 \</span><br><span class="line">-e SEATA_IP=172.16.64.128 \</span><br><span class="line">-v ./seata:/seata-server/resources \</span><br><span class="line">--privileged=<span class="literal">true</span> \</span><br><span class="line">--network hm-net \</span><br><span class="line">-d \</span><br><span class="line">seataio/seata-server:1.5.2</span><br></pre></td></tr></table></figure>
-
-<p>配置配置文件中如果指定了使用mysql存储，则需要配置好mysql，注意mysql、nacos、seata是否需要在同一个网络</p>
-<h3 id="微服务集成Seata"><a href="#微服务集成Seata" class="headerlink" title="微服务集成Seata"></a>微服务集成Seata</h3><ol>
-<li><p>依赖</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--seata 分布式事务--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-seata<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">seata:</span> </span><br><span class="line">  <span class="attr">registry:</span>  <span class="comment"># TC服务注册中心的配置，微服务根据这些信息去注册中心获取tc服务地址</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">nacos</span>  <span class="comment"># 注册中心类型 nacos</span></span><br><span class="line">    <span class="attr">nacos:</span> </span><br><span class="line">      <span class="attr">server-addr:</span> <span class="number">172.16</span><span class="number">.64</span><span class="number">.128</span><span class="string">:8848</span>  <span class="comment"># nacos地址</span></span><br><span class="line">      <span class="attr">namespace:</span> <span class="string">&quot;&quot;</span>  <span class="comment"># namespace,默认为空</span></span><br><span class="line">      <span class="attr">group:</span> <span class="string">DEFAULT_GROUP</span> <span class="comment"># 分组，默认是DEFAULT_GROUP</span></span><br><span class="line">      <span class="attr">application:</span> <span class="string">seata-server</span>  <span class="comment"># seata服务名称</span></span><br><span class="line">      <span class="attr">username:</span> <span class="string">nacos</span></span><br><span class="line">      <span class="attr">password:</span> <span class="string">nacos</span></span><br><span class="line">  <span class="attr">tx-service-group:</span> <span class="string">hmall</span>  <span class="comment"># 事务组名称</span></span><br><span class="line">  <span class="attr">service:</span></span><br><span class="line">    <span class="attr">vgroup-mapping:</span>  <span class="comment"># 事务组与tc集群的映射关系</span></span><br><span class="line">      <span class="attr">hmall:</span> <span class="string">&quot;default&quot;</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-
+        
+          <p class="article-more-link">
+            <a href="/2024/10/20/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%BE%AE%E6%9C%8D%E5%8A%A1-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/#more">继续阅读全文 »</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
@@ -368,27 +333,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <!-- Table of Contents -->
-        
         <blockquote>
 <p>JVM 全称是Java Virtual Machine（Java虚拟机）。JVM本质上是一个运行在计算机上的程序，他的职责是运行 Java字节码文件</p>
 </blockquote>
-<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/13-21-52-16-QQ_1728827526306.png"></p>
-<h2 id="JVM功能"><a href="#JVM功能" class="headerlink" title="JVM功能"></a>JVM功能</h2><ul>
-<li><p><strong>解释和运行</strong>：将字节码文件中的指令实时的解释成机器码，让计算机执行</p>
-</li>
-<li><p><strong>内存管理</strong>：</p>
-<ul>
-<li><p>自动为对象、方法等分配内存</p>
-</li>
-<li><p>自动的垃圾回收机制，回收不再使用的对象</p>
-</li>
-</ul>
-</li>
-<li><p><strong>即时编译</strong>（JIT）：对字节码中的热点代码进行解释并优化，生成汇编和机器码并保存至内存中，下次执行时直接调用</p>
-</li>
-</ul>
-
+        
+          <p class="article-more-link">
+            <a href="/2024/10/13/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%88%9D%E8%AF%86JVM/#more">继续阅读全文 »</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">

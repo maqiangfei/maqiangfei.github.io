@@ -5,18 +5,20 @@
   
   <title>学习笔记 - 微服务 分布式事务 | maqiangfei</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="本文简单介绍分布式事务的解决方案  分布式事务下单业务，前端请求首先进入订单服务，创建订单并写入数据库。然后订单服务调用购物车服务和库存服务：  购物车服务负责清理购物车信息  库存服务负责扣减商品库存     在分布式系统中，如果一个业务需要多个服务合作完成，而且每一个服务都有事务，多个事务必须同时成功或失败，这样的事务就是分布式事务。其中的每个服务的事务就是一个分支事务。整个业务称为全局事务">
+  <meta name="description" content="本文简单介绍分布式事务的解决方案">
 <meta property="og:type" content="article">
 <meta property="og:title" content="学习笔记 - 微服务 分布式事务">
 <meta property="og:url" content="https://maqiangfei.github.io/2024/10/20/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%BE%AE%E6%9C%8D%E5%8A%A1-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/index.html">
 <meta property="og:site_name" content="maqiangfei">
-<meta property="og:description" content="本文简单介绍分布式事务的解决方案  分布式事务下单业务，前端请求首先进入订单服务，创建订单并写入数据库。然后订单服务调用购物车服务和库存服务：  购物车服务负责清理购物车信息  库存服务负责扣减商品库存     在分布式系统中，如果一个业务需要多个服务合作完成，而且每一个服务都有事务，多个事务必须同时成功或失败，这样的事务就是分布式事务。其中的每个服务的事务就是一个分支事务。整个业务称为全局事务">
+<meta property="og:description" content="本文简单介绍分布式事务的解决方案">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/20-20-36-31-QQ_1729427786273.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/20-20-49-59-QQ_1729428596701.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/20-21-03-10-QQ_1729429386941.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/21-10-31-04-QQ_1729477860801.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/21-11-13-28-QQ_1729480400243.png">
 <meta property="article:published_time" content="2024-10-20T12:28:35.000Z">
-<meta property="article:modified_time" content="2024-10-20T15:23:23.323Z">
+<meta property="article:modified_time" content="2024-10-21T03:33:49.178Z">
 <meta property="article:author" content="maqiangfei">
 <meta property="article:tag" content="SpringCloud">
 <meta name="twitter:card" content="summary">
@@ -104,6 +106,8 @@
         <blockquote>
 <p>本文简单介绍分布式事务的解决方案</p>
 </blockquote>
+<span id="more"></span>
+
 <h2 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h2><p>下单业务，前端请求首先进入订单服务，创建订单并写入数据库。然后订单服务调用购物车服务和库存服务：</p>
 <ul>
 <li><p>购物车服务负责清理购物车信息</p>
@@ -130,7 +134,7 @@
 </ul>
 <img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/20-21-03-10-QQ_1729429386941.png" title="" alt="" width="628">
 
-<h3 id="部署TC服务"><a href="#部署TC服务" class="headerlink" title="部署TC服务"></a>部署TC服务</h3><p>在docker中部署，需要先准备好Seata的配置文件</p>
+<h3 id="部署TC服务"><a href="#部署TC服务" class="headerlink" title="部署TC服务"></a>部署TC服务</h3><p>在docker中部署，需要先准备好Seata的配置文件夹</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker run --name seata \</span><br><span class="line">-p 8099:8099 \</span><br><span class="line">-p 7099:7099 \</span><br><span class="line">-e SEATA_IP=172.16.64.128 \</span><br><span class="line">-v ./seata:/seata-server/resources \</span><br><span class="line">--privileged=<span class="literal">true</span> \</span><br><span class="line">--network hm-net \</span><br><span class="line">-d \</span><br><span class="line">seataio/seata-server:1.5.2</span><br></pre></td></tr></table></figure>
 
 <p>配置配置文件中如果指定了使用mysql存储，则需要配置好mysql，注意mysql、nacos、seata是否需要在同一个网络</p>
@@ -140,6 +144,87 @@
 </li>
 <li><p>配置</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">seata:</span> </span><br><span class="line">  <span class="attr">registry:</span>  <span class="comment"># TC服务注册中心的配置，微服务根据这些信息去注册中心获取tc服务地址</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">nacos</span>  <span class="comment"># 注册中心类型 nacos</span></span><br><span class="line">    <span class="attr">nacos:</span> </span><br><span class="line">      <span class="attr">server-addr:</span> <span class="number">172.16</span><span class="number">.64</span><span class="number">.128</span><span class="string">:8848</span>  <span class="comment"># nacos地址</span></span><br><span class="line">      <span class="attr">namespace:</span> <span class="string">&quot;&quot;</span>  <span class="comment"># namespace,默认为空</span></span><br><span class="line">      <span class="attr">group:</span> <span class="string">DEFAULT_GROUP</span> <span class="comment"># 分组，默认是DEFAULT_GROUP</span></span><br><span class="line">      <span class="attr">application:</span> <span class="string">seata-server</span>  <span class="comment"># seata服务名称</span></span><br><span class="line">      <span class="attr">username:</span> <span class="string">nacos</span></span><br><span class="line">      <span class="attr">password:</span> <span class="string">nacos</span></span><br><span class="line">  <span class="attr">tx-service-group:</span> <span class="string">hmall</span>  <span class="comment"># 事务组名称</span></span><br><span class="line">  <span class="attr">service:</span></span><br><span class="line">    <span class="attr">vgroup-mapping:</span>  <span class="comment"># 事务组与tc集群的映射关系</span></span><br><span class="line">      <span class="attr">hmall:</span> <span class="string">&quot;default&quot;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="XA模式"><a href="#XA模式" class="headerlink" title="XA模式"></a>XA模式</h3><p>XA规范是X&#x2F;Open组织定义的分布式事务处理（DTP, Distributed Transaction Processing）标准，XA规范描述了全局的TM与局部的RM之间的接口，几乎所有主流的关系型数据库都对XA规范提供了支持</p>
+<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/21-10-31-04-QQ_1729477860801.png"></p>
+<p>一阶段工作：</p>
+<ol>
+<li><p>RM注册分支事务到TC</p>
+</li>
+<li><p>RM执行分支业务sql但不提交</p>
+</li>
+<li><p>RM报告执行状态到TC</p>
+</li>
+</ol>
+<p>二阶段工作：</p>
+<ol>
+<li><p>TC检测各分支事务执行状态</p>
+<ol>
+<li><p>如果都成功，通知所有RM提交事务</p>
+</li>
+<li><p>如果有失败，通知所有RM回滚事务</p>
+</li>
+</ol>
+</li>
+<li><p>RM接收TC指令，提交或回滚事务</p>
+</li>
+</ol>
+<p>优点：</p>
+<ul>
+<li>事务的强一致性，满足ACID原则</li>
+<li>常用数据库都支持，实现简单，并且没有代码侵入</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li><p>一阶段需要锁定数据库资源，等待二阶段结束才释放，性能较差</p>
+</li>
+<li><p>依赖关系型数据库实现事务</p>
+</li>
+</ul>
+<p><strong>使用方式</strong>：</p>
+<ol>
+<li><p>修改配置，开启XA模式</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">seata:</span> </span><br><span class="line">  <span class="attr">data-source-proxy-mode:</span> <span class="string">XA</span> <span class="comment"># 开启数据源代理的XA模式</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>给发起全局事务的入口方法添加<code>@GlobalTransactional</code>注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@GlobalTransactional</span></span><br><span class="line"><span class="keyword">public</span> Long <span class="title function_">createOrder</span><span class="params">(OrderFormDTO order)</span> &#123;</span><br><span class="line">    <span class="comment">// 创建订单</span></span><br><span class="line">    <span class="comment">// 清理购物车</span></span><br><span class="line">    <span class="comment">// 扣减库存</span></span><br><span class="line">    <span class="keyword">return</span> order.getId();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="AT模式"><a href="#AT模式" class="headerlink" title="AT模式"></a>AT模式</h3><p>Seata主推的是AT模式，AT模式同样是分阶段提交的事务模型，不过却弥补了XA模型中资源锁定周期过长的缺陷</p>
+<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/21-11-13-28-QQ_1729480400243.png"></p>
+<p>一阶段RM工作：</p>
+<ul>
+<li><p>注册分支事务</p>
+</li>
+<li><p>记录undo-log（数据快照）</p>
+</li>
+<li><p>执行业务sql并提交</p>
+</li>
+<li><p>报告事务状态</p>
+</li>
+</ul>
+<p>二阶段RM工作</p>
+<ul>
+<li><p>如果是提交，则删除undo-log即可</p>
+</li>
+<li><p>如果是回滚，根据undo-log恢复数据到更新前</p>
+</li>
+</ul>
+<p><strong>AT模式与XA模式的区别</strong>：</p>
+<ul>
+<li><p>XA模式一阶段不提交事务，锁定资源；AT模式一阶段直接提交，不锁定资源</p>
+</li>
+<li><p>XA模式依赖数据库机制实现回滚；AT模式利用数据快照实现数据回滚</p>
+</li>
+<li><p>XA模式强一致性；AT模式最终一致，中间会出现短暂的不一致</p>
+</li>
+</ul>
+<p><strong>使用方式</strong>：</p>
+<ol>
+<li><p>快照是通过数据表记录的，所以每个分支事务的数据库都要创建<code>undo_log</code>表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- for AT mode you must to init this sql for you business database. the seata server not need it.</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> `undo_log`</span><br><span class="line">(</span><br><span class="line">    `branch_id`     <span class="type">BIGINT</span>       <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;branch transaction id&#x27;</span>,</span><br><span class="line">    `xid`           <span class="type">VARCHAR</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;global transaction id&#x27;</span>,</span><br><span class="line">    `context`       <span class="type">VARCHAR</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;undo_log context,such as serialization&#x27;</span>,</span><br><span class="line">    `rollback_info` LONGBLOB     <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;rollback info&#x27;</span>,</span><br><span class="line">    `log_status`    <span class="type">INT</span>(<span class="number">11</span>)      <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;0:normal status,1:defense status&#x27;</span>,</span><br><span class="line">    `log_created`   DATETIME(<span class="number">6</span>)  <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;create datetime&#x27;</span>,</span><br><span class="line">    `log_modified`  DATETIME(<span class="number">6</span>)  <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;modify datetime&#x27;</span>,</span><br><span class="line">    <span class="keyword">UNIQUE</span> KEY `ux_undo_log` (`xid`, `branch_id`)</span><br><span class="line">) ENGINE <span class="operator">=</span> InnoDB</span><br><span class="line">  AUTO_INCREMENT <span class="operator">=</span> <span class="number">1</span></span><br><span class="line">  <span class="keyword">DEFAULT</span> CHARSET <span class="operator">=</span> utf8mb4 COMMENT <span class="operator">=</span><span class="string">&#x27;AT transaction mode undo table&#x27;</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改配置，将事务模式修改为AT模式</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">seata:</span> </span><br><span class="line">  <span class="attr">data-source-proxy-mode:</span> <span class="string">AT</span> <span class="comment"># 开启数据源代理的AT模式</span></span><br></pre></td></tr></table></figure></li>
 </ol>
 
       
@@ -240,7 +325,7 @@
       
         <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1"><span class="toc-number">1.</span> <span class="toc-text">分布式事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Seata"><span class="toc-number">2.</span> <span class="toc-text">Seata</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text">架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2TC%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.2.</span> <span class="toc-text">部署TC服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9B%86%E6%88%90Seata"><span class="toc-number">2.3.</span> <span class="toc-text">微服务集成Seata</span></a></li></ol></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1"><span class="toc-number">1.</span> <span class="toc-text">分布式事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Seata"><span class="toc-number">2.</span> <span class="toc-text">Seata</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text">架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2TC%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.2.</span> <span class="toc-text">部署TC服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9B%86%E6%88%90Seata"><span class="toc-number">2.3.</span> <span class="toc-text">微服务集成Seata</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XA%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.4.</span> <span class="toc-text">XA模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AT%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.5.</span> <span class="toc-text">AT模式</span></a></li></ol></li></ol>
           </div>
       </div>
     </div>
