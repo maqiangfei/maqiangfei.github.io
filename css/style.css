@@ -274,7 +274,7 @@ body {
 .widget ol,
 .article-entry dl,
 .widget dl {
-  margin: 0 20px;
+  margin: 0 0 0 20px;
   line-height: 1.6em;
 }
 .article-entry ul ul,
