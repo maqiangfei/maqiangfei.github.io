@@ -19,7 +19,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/17-09-49-26-QQ_1729129760820.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/17-15-56-19-QQ_1729151776416.png">
 <meta property="article:published_time" content="2024-10-16T04:18:39.000Z">
-<meta property="article:modified_time" content="2024-10-17T09:45:21.566Z">
+<meta property="article:modified_time" content="2024-10-21T09:04:31.924Z">
 <meta property="article:author" content="maqiangfei">
 <meta property="article:tag" content="Docker">
 <meta name="twitter:card" content="summary">
@@ -199,11 +199,11 @@
 </tbody></table>
 </div>
 
-<p>注意，数据卷的挂载只能在<code>docker run</code>时使用<code>-v 数据卷名:容器内目录</code>进行挂在，当创建容器时，如果挂载的数据卷不存在，会自动创建数据卷</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name nginx -p 80:80 -v html:/usr/share/nginx/html nginx</span><br></pre></td></tr></table></figure>
+<p>注意，数据卷的挂载只能在<code>docker run</code>时使用<code>-v 数据卷名:容器内目录</code>进行挂载，当创建容器时，如果挂载的数据卷不存在，会自动创建数据卷</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">--name nginx \</span><br><span class="line">-p 80:80 \</span><br><span class="line">-v html:/usr/share/nginx/html \</span><br><span class="line">nginx</span><br></pre></td></tr></table></figure>
 
 <h2 id="本地目录挂载"><a href="#本地目录挂载" class="headerlink" title="本地目录挂载"></a>本地目录挂载</h2><p>与数据卷挂载相似，不同的是将数据卷名改为宿主机目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name nginx -p 80:80 -v 本地目录:容器内目录 nginx</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">--name nginx \</span><br><span class="line">-p 80:80 \</span><br><span class="line">-v 本地目录:容器内目录 \</span><br><span class="line">nginx</span><br></pre></td></tr></table></figure>
 
 <p>注意：本地目录必须以<code>/</code>或<code>./</code>开头，从而区分开数据卷名</p>
 <p>下面以mysql为例，宿主机中的文件夹 <code>/root/mysql/conf</code> 中存放mysql的配置文件，<code>/root/mysql/data</code>用于存放数据文件，<code>/root/mysql/init</code>中存放的是sql脚本，在创建容器时，通过<code>-v</code>挂载到容器中的对应文件夹</p>
@@ -274,7 +274,7 @@
 <p>也可以直接基于JDK为基础镜像，省略前面的步骤：</p>
 <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基础镜像</span></span><br><span class="line"><span class="keyword">FROM</span> openjdk:<span class="number">11.0</span>-jre-buster</span><br><span class="line"><span class="comment"># 拷贝jar包</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> docker-demo.jar /app.jar</span></span><br><span class="line"><span class="comment"># 入口</span></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;java&quot;</span>, <span class="string">&quot;-jar&quot;</span>, <span class="string">&quot;/app.jar&quot;</span>]</span></span><br></pre></td></tr></table></figure>
 
-<p>当编写好了Dockerfile，可以利用下面命令来构建镜像，注意，上述的 DockerFile 中的<code>docker-demo.jar</code>需要和 DockerFile 在同级目录</p>
+<p>当编写好了Dockerfile，可以利用下面命令来构建镜像，注意，上述的<code>docker-demo.jar</code>需要和 DockerFile 在同级目录</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t docker-demo dockerfile所在目录</span><br></pre></td></tr></table></figure>
 
 <p>构建后对象后，可以使用 <code>docker run</code>创建容器运行</p>
@@ -327,9 +327,9 @@
 </div>
 
 <p>可以在创建并运行容器的时候就指定网络</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker network create mqf</span><br><span class="line">docker run -d --name docker-demo -p 8080:8080 --network mqf docker-demo </span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker network create mqf</span><br><span class="line">docker run -d \</span><br><span class="line">--name docker-demo \</span><br><span class="line">-p 8080:8080 \</span><br><span class="line">--network mqf \</span><br><span class="line">docker-demo </span><br></pre></td></tr></table></figure>
 
-<p>当两个容器加入同一个自定义网络后，它们可以通过容器名进行访问</p>
+<p>当两个容器加入同一个自定义网络后，它们可以通过容器名作为ip进行访问</p>
 <h2 id="项目部署"><a href="#项目部署" class="headerlink" title="项目部署"></a>项目部署</h2><h3 id="Java应用"><a href="#Java应用" class="headerlink" title="Java应用"></a>Java应用</h3><ol>
 <li><p>创建自定义网络</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create mqf</span><br></pre></td></tr></table></figure>
@@ -386,7 +386,7 @@
 <tr>
 <td></td>
 <td><code>-p</code></td>
-<td>指定project名称，默认<code>root</code></td>
+<td>指定project名称，默认root</td>
 </tr>
 <tr>
 <td>Commands</td>
