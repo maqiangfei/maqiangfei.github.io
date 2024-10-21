@@ -561,6 +561,12 @@ a.article-title:hover {
     font-size: 1.5em;
   }
 }
+.overflow {
+  overflow: auto;
+}
+.overflow td {
+  white-space: nowrap;
+}
 table {
   font-size: 14px;
 }
@@ -617,7 +623,7 @@ table {
   height: auto;
   display: block;
   margin: auto;
-  margin-top: 15px;
+  margin-top: 0px;
   border-radius: 5px;
 }
 .article-entry iframe {
@@ -1246,6 +1252,7 @@ table {
   border-radius: 4px;
   margin: auto 3px;
   padding: 0 0.3em;
+  font-size: 14px;
 }
 .article-entry pre > code {
   background: none;
