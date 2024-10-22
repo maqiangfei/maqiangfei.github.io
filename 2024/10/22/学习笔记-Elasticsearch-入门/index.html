@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>学习笔记 Elasticsearch 入门 | maqiangfei</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文简单记录对Elasticsearch的学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习笔记 Elasticsearch 入门">
+<meta property="og:url" content="https://maqiangfei.github.io/2024/10/22/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-Elasticsearch-%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="maqiangfei">
+<meta property="og:description" content="本文简单记录对Elasticsearch的学习">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/22-18-41-58-QQ_1729593715504.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/22-19-21-51-QQ_1729596107842.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/22-19-26-09-QQ_1729596365549.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/22-21-50-48-QQ_1729605042955.png">
+<meta property="article:published_time" content="2024-10-22T09:39:27.000Z">
+<meta property="article:modified_time" content="2024-10-22T14:00:42.196Z">
+<meta property="article:author" content="maqiangfei">
+<meta property="article:tag" content="Elasticsearch">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/22-18-41-58-QQ_1729593715504.png">
+  
+    <link rel="alternate" href="/" title="maqiangfei" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://maqiangfei.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">maqiangfei</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-学习笔记-Elasticsearch-入门" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2024/10/22/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-Elasticsearch-%E5%85%A5%E9%97%A8/" class="article-date">
+  <time datetime="2024-10-22T09:39:27.000Z" itemprop="datePublished">2024-10-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      学习笔记 Elasticsearch 入门
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <blockquote>
+<p>本文简单记录对Elasticsearch的学习</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="认识和安装"><a href="#认识和安装" class="headerlink" title="认识和安装"></a>认识和安装</h2><p>Lucene是一个Java语言的搜索引擎类库，是Apache公司的顶级项目，由DougCutting于1999年研发。官网地址：<a target="_blank" rel="noopener" href="https://lucene.apache.org/">https://lucene.apache.org/</a>.</p>
+<ul>
+<li><p>2004年Shay Banon基于Lucene开发了Compass</p>
+</li>
+<li><p>2010年Shay Banon重写了Compass, 取名为Elasticsearch</p>
+</li>
+<li><p>官网地址：<a target="_blank" rel="noopener" href="https://www.elastic.co/cn/">Elastic — The Search AI Company | Elastic</a>。</p>
+</li>
+<li><p>elasticsearch具备下列优势：</p>
+<ul>
+<li><p>支持分布式，可水平扩展</p>
+</li>
+<li><p>提供Restful接口，可被任何语言调用</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>Elasticsearch结合kibana、Logstash、Beats，是一整套技术栈，被叫做ELK。被广泛应用在日志数据分析、实时监控等领域。</p>
+<img title="" src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/22-18-41-58-QQ_1729593715504.png" alt="" width="436">
+
+<p>基于Docker安装Elasticsearch：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">--name es \</span><br><span class="line">-e <span class="string">&quot;ES_JAVA_OPTS=-Xms512m -Xmx512m&quot;</span> \</span><br><span class="line">-e <span class="string">&quot;discovery.type=single-node&quot;</span> \</span><br><span class="line">-v es-data:/usr/share/elasticsearch/data \</span><br><span class="line">-v es-plugins:/usr/share/elasticsearch/plugins \</span><br><span class="line">--privileged \</span><br><span class="line">--network hm-net \</span><br><span class="line">-p 9200:9200 \</span><br><span class="line">-p 9300:9300 \</span><br><span class="line">elasticsearch:7.12.1</span><br></pre></td></tr></table></figure>
+
+<p>基于Docker安装Kibana：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">--name kibana \</span><br><span class="line">-e ELASTICSEARCH_HOSTS=http://es:9200 \</span><br><span class="line">--network=hm-net \</span><br><span class="line">-p 5601:5601 \</span><br><span class="line">kibana:7.12.1</span><br></pre></td></tr></table></figure>
+
+<h2 id="倒排索引"><a href="#倒排索引" class="headerlink" title="倒排索引"></a>倒排索引</h2><p>传统数据库（如MySQL）采用正向索引，例如给 tb_goods 表中的id字段为索引，但当对非索引字段 title 作 like 模糊查询时，那么会遍历整张表。</p>
+<p>Elasticsearch采用倒排索引：</p>
+<ul>
+<li><p>文档（document）：每条数据都是一个文档</p>
+</li>
+<li><p>词条（term）：文档按照语义分成的词语</p>
+</li>
+</ul>
+<p>对文档内容分词，对词条创建索引，并记录词条所在文档的id</p>
+<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/22-19-21-51-QQ_1729596107842.png"></p>
+<p>查询时先根据词条查询到文档id，而后根据文档id查询文档</p>
+<img title="" src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/22-19-26-09-QQ_1729596365549.png" alt="" width="305">
+
+<h2 id="IK分词器"><a href="#IK分词器" class="headerlink" title="IK分词器"></a>IK分词器</h2><p>中文分词往往需要根据语义分析，比较复杂，这就需要用到中文分词器，例如IK分词器。IK分词器是林良益在2006年开源发布的，其采用的正向迭代最细粒度切分算法一直沿用到至今。</p>
+<p><strong>analysis-ik</strong></p>
+<p><code>analysis-ik</code>是整合了IK分词器的一个Elasticsearch插件，其安装只需要将其放入Elasticsearch的插件目录，然后重启即可</p>
+<p>可以通过Kibana的DevTools，使用下面的语法来测试IK分词器：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">POST /_analyze</span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;analyzer&quot;</span><span class="punctuation">:</span> <span class="string">&quot;standard&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;黑马程序员学java太棒了&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>POST</code>：请求方式</p>
+</li>
+<li><p><code>/_analyze</code>：请求路径（Kibana已经配置了Elasticsearch的地址，所以省略了ip和port）</p>
+</li>
+<li><p>请求参数，json风格：</p>
+<ul>
+<li><p><code>analyzer</code>：分词器类型</p>
+<ul>
+<li><p><code>standard</code>：默认</p>
+</li>
+<li><p><code>ik_smart</code>：粗力度</p>
+</li>
+<li><p><code>ik_max_word</code>：最细切分，细粒度IK分词器</p>
+</li>
+</ul>
+</li>
+<li><p><code>text</code>：要分词的内容</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>可以利用config目录的<code>IKAnalyzer.cfg.xml</code>文件添加拓展词典，在拓展词典中添加拓展词条</p>
+<h2 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h2><p>文档数据会被序列化为json格式后存储在Elasticsearch中</p>
+<p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/22-21-50-48-QQ_1729605042955.png"></p>
+<table>
+<thead>
+<tr>
+<th>MySQL</th>
+<th>Elaticsearch</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Table</code></td>
+<td><code>Index</code></td>
+<td>索引（index），就是文档的集合，类似数据库的表（table）</td>
+</tr>
+<tr>
+<td><code>Row</code></td>
+<td><code>Document</code></td>
+<td>文档（Document），就是一条条的数据，类似数据库中的行（Row），文档都是JSON格式</td>
+</tr>
+<tr>
+<td><code>Column</code></td>
+<td><code>Field</code></td>
+<td>字段（Field），就是JSON文档中的字段，类似数据库中的列（Column）</td>
+</tr>
+<tr>
+<td><code>Schema</code></td>
+<td><code>Mapping</code></td>
+<td>Mapping（映射）是索引中文档的约束，例如字段类型约束。类似数据库的表结构（Schema）</td>
+</tr>
+<tr>
+<td><code>SQL</code></td>
+<td><code>DSL</code></td>
+<td>DSL是elasticsearch提供的JSON风格的请求语句，用来定义搜索条件</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://maqiangfei.github.io/2024/10/22/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-Elasticsearch-%E5%85%A5%E9%97%A8/" data-id="cm2kim36d0000cffy9pomhzi5" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Elasticsearch/" rel="tag">Elasticsearch</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/10/20/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%BE%AE%E6%9C%8D%E5%8A%A1-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">学习笔记 - 微服务 分布式事务</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  </section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A4%E8%AF%86%E5%92%8C%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">认识和安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95"><span class="toc-number">2.</span> <span class="toc-text">倒排索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IK%E5%88%86%E8%AF%8D%E5%99%A8"><span class="toc-number">3.</span> <span class="toc-text">IK分词器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-number">4.</span> <span class="toc-text">基础概念</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2024 maqiangfei&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;qiangfei.ma@qq.com
+    </div>
+  </div>
+</footer>
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ 
+<script src="/js/is.js"></script>
+
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/elevator.js"></script>
+
+  </div>
+</body>
+</html>

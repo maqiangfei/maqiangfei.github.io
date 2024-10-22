@@ -24,7 +24,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/19-21-11-43-QQ_1729343488047.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/20-10-38-04-QQ_1729391881146.png">
 <meta property="article:published_time" content="2024-10-17T09:43:33.000Z">
-<meta property="article:modified_time" content="2024-10-20T12:30:38.963Z">
+<meta property="article:modified_time" content="2024-10-22T02:09:17.732Z">
 <meta property="article:author" content="maqiangfei">
 <meta property="article:tag" content="SpringCloud">
 <meta name="twitter:card" content="summary">
@@ -195,7 +195,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient(value = &quot;item-service&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ItemClient</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/items&quot;)</span></span><br><span class="line">    List&lt;ItemDTO&gt; <span class="title function_">queryItemByIds</span><span class="params">(<span class="meta">@RequestParam(&quot;ids&quot;)</span> Collection&lt;Long&gt; ids)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>使用FeignClient，实现远程调用</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;ItemDTO&gt; items = itemClient.queryItemByIds(List.of(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> ItemClient itemClient;</span><br><span class="line"></span><br><span class="line">List&lt;ItemDTO&gt; items = itemClient.queryItemByIds(List.of(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure></li>
 </ol>
 <h3 id="连接池"><a href="#连接池" class="headerlink" title="连接池"></a>连接池</h3><p>OpenFeign对Http请求做了优雅的伪装，不过其底层发起http请求，依赖于其它的框架。这些框架可以自己选择</p>
 <ul>
@@ -473,7 +473,7 @@
 <h4 id="配置共享"><a href="#配置共享" class="headerlink" title="配置共享"></a>配置共享</h4><img title="" src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/19-21-30-36-QQ_1729344623015.png" alt="" width="590">
 
 <ol>
-<li><p>在nacos的控制台 ip:port&#x2F;nacos 中编辑公共配置</p>
+<li><p>在nacos的控制台（ip:port&#x2F;nacos）中编辑公共配置</p>
 <p><img src="https://raw.githubusercontent.com/maqiangfei/images/master/2024/10/19-21-11-43-QQ_1729343488047.png"></p>
 </li>
 <li><p>引入依赖</p>
